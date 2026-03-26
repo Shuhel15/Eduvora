@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // ✅ onAuthStateChanged uses Firebase's local cache — instant on refresh
+    // onAuthStateChanged uses Firebase's local cache — instant on refresh
     // Do NOT fetch Firestore here — it causes slow load every refresh
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser || null)
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     return unsub
   }, [])
 
-  // ── Save user to Firestore (called once on first signup/login) ──
+  // Save user to Firestore (called once on first signup/login) 
   const saveUserToFirestore = async (firebaseUser, extraData = {}) => {
     try {
       const docRef  = doc(db, 'users', firebaseUser.uid)
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // ── Sign In with Email ──
+  // Sign In with Email 
   const signInEmail = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
@@ -57,7 +57,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // ── Sign Up with Email ──
+  //Sign Up with Email
   const signUpEmail = async (email, password, name) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // ── Sign In with Google ──
+  // Sign In with Google 
   const signInGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider)
@@ -82,7 +82,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // ── Logout ──
+  // Logout 
   const logOut = async () => {
     await signOut(auth)
   }

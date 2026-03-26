@@ -13,7 +13,7 @@ import { getClass10Recommendation, getClass12Recommendation } from '../utils/gem
 import { saveQuizResult } from '../utils/firestore'
 import { useAuth } from '../context/AuthContext'
 
-// ── Static stream data (benefits, subjects, after12) ──────────────
+// Static stream data (benefits, subjects, after12)
 const streamData = {
   Science: {
     icon: MdOutlineScience, color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)',
@@ -193,9 +193,9 @@ function Class10Results({ data }) {
   )
 }
 
-// ─────────────────────────────────────────────
+
 // CLASS 12 RESULTS
-// ─────────────────────────────────────────────
+
 function Class12Results({ data }) {
   const navigate = useNavigate()
   const [selectedCourse, setSelectedCourse] = useState(null)
@@ -327,7 +327,7 @@ function Class12Results({ data }) {
     )
   }
 
-  // ── Course list ──
+  //  Course list
   return (
     <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 20px' }}>
       <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -357,7 +357,7 @@ function Class12Results({ data }) {
                   {i === 0 && <span style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 100, padding: '3px 10px', fontSize: '0.72rem', fontWeight: 600 }}>⭐ Top Pick</span>}
                   <span style={{ fontSize: '0.76rem', color: 'rgba(240,239,232,0.35)' }}>⏱ {c.duration}</span>
                 </div>
-                <h3 style={{ fontSize: 'clamp(0.95rem,2vw,1.1rem)', fontWeight: 600, marginBottom: 5 }}>{c.name}</h3>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.4rem)', fontWeight: 600, marginBottom: 5 }}>{c.name}</h3>
                 <p style={{ fontSize: '0.83rem', color: 'rgba(240,239,232,0.48)', lineHeight: 1.55 }}>{c.why}</p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
@@ -378,9 +378,8 @@ function Class12Results({ data }) {
   )
 }
 
-// ─────────────────────────────────────────────
 // MAIN RESULTS PAGE
-// ─────────────────────────────────────────────
+
 const loadingSteps = [
   'Reading your quiz answers...',
   'Analysing your interests...',
@@ -419,7 +418,7 @@ export default function Results() {
     if (result.success) {
       setAiData(result.data)
       setStatus('success')
-      // ✅ Save to Firestore in background
+      // Save to Firestore in background
       if (user) {
         saveQuizResult(user.uid, {
           grade,
@@ -512,9 +511,9 @@ export default function Results() {
               <div style={{ width: 260, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 100, overflow: 'hidden' }}>
                 <div style={{ height: '100%', background: 'linear-gradient(90deg,#6366f1,#a78bfa)', borderRadius: 100, width: `${((60 - countdown) / 60) * 100}%`, transition: 'width 1s linear' }} />
               </div>
-              <p style={{ color: 'rgba(240,239,232,0.3)', fontSize: '0.8rem' }}>
+              {/* <p style={{ color: 'rgba(240,239,232,0.3)', fontSize: '0.8rem' }}>
                 Or <a href="https://aistudio.google.com" target="_blank" rel="noreferrer" style={{ color: '#a5b4fc' }}>upgrade your AI API plan</a> for unlimited access
-              </p>
+              </p> */}
               <button onClick={runFetch} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#f0efe8', fontFamily: "'Sora',sans-serif", fontSize: '0.88rem', padding: '10px 22px', borderRadius: 100, cursor: 'pointer' }}>
                 <TbRefresh size={14} /> Retry Now
               </button>

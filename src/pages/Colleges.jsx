@@ -8,7 +8,7 @@ import {
 } from 'react-icons/tb'
 import { HiOutlineAcademicCap } from 'react-icons/hi2'
 
-// ── Distance in km ─────────────────────────────
+//Distance in km 
 function haversine(lat1, lon1, lat2, lon2) {
   const R    = 6371
   const dLat = (lat2 - lat1) * Math.PI / 180
@@ -17,7 +17,7 @@ function haversine(lat1, lon1, lat2, lon2) {
   return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(1)
 }
 
-// ── Load Leaflet CSS + JS ──────────────────────
+// Load Leaflet CSS + JS 
 function loadLeaflet() {
   return new Promise((resolve) => {
     if (window.L) return resolve(window.L)
@@ -35,7 +35,7 @@ function loadLeaflet() {
   })
 }
 
-// ── Fetch only universities & colleges (NO schools) ──
+// Fetch universities & colleges 
 async function fetchNearbyColleges(lat, lng, radiusM = 15000) {
   const query = `
     [out:json][timeout:25];
@@ -56,7 +56,7 @@ async function fetchNearbyColleges(lat, lng, radiusM = 15000) {
   return data.elements || []
 }
 
-// ── Reverse geocode with Nominatim ─────────────
+//  Reverse geocode with Nominatim 
 async function getAddress(lat, lng) {
   try {
     const res  = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
@@ -67,13 +67,13 @@ async function getAddress(lat, lng) {
   }
 }
 
-// ── Type badge — University & College only ─────
+//  Type badge — University & College only 
 function typeStyle(amenity) {
   if (amenity === 'university') return { bg: 'rgba(99,102,241,0.15)',  text: '#a5b4fc', border: 'rgba(99,102,241,0.3)',  label: 'University' }
   return                               { bg: 'rgba(16,185,129,0.15)', text: '#6ee7b7', border: 'rgba(16,185,129,0.3)',  label: 'College'    }
 }
 
-// ── Map Modal ──────────────────────────────────
+//  Map Modal 
 function MapModal({ college, userPos, onClose }) {
   const mapRef     = useRef(null)
   const leafletMap = useRef(null)
@@ -151,7 +151,7 @@ function MapModal({ college, userPos, onClose }) {
   )
 }
 
-// ── Main Page ──────────────────────────────────
+//  Main Page 
 export default function Colleges() {
   const navigate = useNavigate()
 
@@ -182,7 +182,7 @@ export default function Colleges() {
         const clat = el.lat || el.center?.lat
         const clng = el.lon || el.center?.lon
         if (!clat || !clng) return null
-        // ── Skip schools — only universities & colleges ──
+        //Skip schools — only universities & colleges
         if (el.tags?.amenity === 'school') return null
         return {
           id:       el.id,
@@ -319,9 +319,9 @@ export default function Colleges() {
 
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 100, padding: '5px 13px', marginBottom: 12, fontSize: '0.78rem', color: '#a5b4fc' }}>
+          {/* <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 100, padding: '5px 13px', marginBottom: 12, fontSize: '0.78rem', color: '#a5b4fc' }}>
             <TbMapPin size={12} /> Powered by OpenStreetMap · 100% Free
-          </div>
+          </div> */}
           <h1 style={{ fontFamily: "'Roboto',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 700, marginBottom: 8, lineHeight: 1.2 }}>
             Find Colleges Near You
           </h1>

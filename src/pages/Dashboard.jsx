@@ -51,7 +51,7 @@ function getMatch(quiz) {
   return quiz.result?.courses?.[0]?.match
 }
 
-// ── Result Modal ───────────────────────────────
+// Result Modal 
 function ResultModal({ quiz, onClose }) {
   const [tab, setTab] = useState('overview')
   const gs     = gradeStyle[quiz.grade] || gradeStyle['12']
@@ -197,7 +197,7 @@ function ResultModal({ quiz, onClose }) {
   )
 }
 
-// ── Main Dashboard ─────────────────────────────
+// Main Dashboard 
 export default function Dashboard() {
   const navigate = useNavigate()
   const { user, logOut } = useAuth()
@@ -392,7 +392,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ── Stats Grid ── */}
+        {/* Stats Grid  */}
         {history.length > 0 && (
           <div className="stats-grid fade-up" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14, marginBottom:28, animationDelay:'0.1s' }}>
             {[
@@ -421,7 +421,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ── History Header ── */}
+        {/*  History Header */}
         <div className="fade-up" style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, animationDelay:'0.2s' }}>
           <div>
             <h2 style={{ fontFamily:"'Roboto',sans-serif", fontSize:'1.1rem', fontWeight:700, display:'flex', alignItems:'center', gap:8, marginBottom:3 }}>
@@ -460,7 +460,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ── Quiz Cards Grid ── */}
+        {/* Quiz Cards Grid  */}
         {!loading && history.length > 0 && (
           <div className="cards-grid" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:16 }}>
             {history.map((quiz, i) => {

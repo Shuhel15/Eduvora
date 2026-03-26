@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { TbCompass } from 'react-icons/tb'
 
 export default function SplashScreen({ onDone }) {
-  const [phase, setPhase] = useState('enter') // enter | hold | exit
+  const [phase, setPhase] = useState('enter')
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase('hold'), 600)

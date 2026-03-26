@@ -21,7 +21,7 @@ export default function Login() {
   const [submitting,  setSubmitting]  = useState(false)
   const [firebaseErr, setFirebaseErr] = useState('')
 
-  // ✅ Redirect to quiz once Firebase confirms user is logged in
+  //Redirect to quiz once Firebase confirms user is logged in
   useEffect(() => {
     if (!loading && user) {
       navigate('/quiz', { replace: true })
@@ -91,7 +91,7 @@ export default function Login() {
     if (!result.success) {
       setFirebaseErr(result.error)
     }
-    // ✅ On success — useEffect watches user state and navigates automatically
+    // On success — useEffect watches user state and navigates automatically
     // No manual navigate() call needed here
   }
 
@@ -103,7 +103,7 @@ export default function Login() {
     if (!result.success) {
       setFirebaseErr(result.error)
     }
-    // ✅ Navigation handled by useEffect
+    // Navigation handled by useEffect
   }
 
   const hasError = (f) => touched[f] && errors[f]

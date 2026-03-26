@@ -4,9 +4,6 @@ import { useAuth } from '../context/AuthContext'
 export default function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
 
-  // ✅ MUST wait for Firebase to restore session before checking
-  // Without this, loading=true means user=null temporarily
-  // causing a redirect to /login even when the user IS logged in
   if (loading) {
     return (
       <div style={{
@@ -28,7 +25,7 @@ export default function ProtectedRoute({ children }) {
     )
   }
 
-  // ✅ Only redirect AFTER loading is false and user is still null
+  // Only redirect AFTER loading is false and user is still null
   if (!user) return <Navigate to="/login" replace />
 
   return children

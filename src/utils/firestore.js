@@ -5,7 +5,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '../firebase/config'
 
-// ── Save quiz result to Firestore ──
+//  Save quiz result to Firestore 
 export async function saveQuizResult(userId, { grade, answers, result }) {
   try {
     const ref = collection(db, 'users', userId, 'quizzes')
@@ -22,7 +22,7 @@ export async function saveQuizResult(userId, { grade, answers, result }) {
   }
 }
 
-// ── Fetch all quiz results for a user ──
+// Fetch all quiz results for a user
 export async function getQuizHistory(userId) {
   try {
     const ref = collection(db, 'users', userId, 'quizzes')

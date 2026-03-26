@@ -127,7 +127,7 @@ export default function Home() {
           -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
         }
 
-        /* ── RESPONSIVE ── */
+        /*  RESPONSIVE */
         .section-inner { max-width:1140px; margin:0 auto; padding:0 24px; }
 
         .hero-section  { padding:100px 24px 60px; }
@@ -187,7 +187,7 @@ export default function Home() {
         }
       `}</style>
 
-      {/* ─── HERO ─── */}
+      {/*  HERO*/}
       <section className="hero-section" style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center' }}>
         <div className="mesh-bg" />
         <div className="grid-bg" />
@@ -233,7 +233,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── FEATURES ─── */}
+      {/*  FEATURES  */}
       <section className="feat-section">
         <div className="section-inner">
           <div style={{ textAlign:'center', marginBottom:52 }}>
@@ -259,7 +259,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─── */}
+      {/*  HOW IT WORKS */}
       <section id="how-it-works" className="how-section" style={{ background:'rgba(255,255,255,0.02)', borderTop:'1px solid rgba(255,255,255,0.05)', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
         <div className="section-inner" style={{ maxWidth:960 }}>
           <div style={{ textAlign:'center', marginBottom:56 }}>
@@ -296,7 +296,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── STREAMS ─── */}
+      {/*  STREAMS */}
       <section id="about" className="stream-section">
         <div className="section-inner">
           <div style={{ textAlign:'center', marginBottom:52 }}>
@@ -321,7 +321,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── STATS ─── */}
+      {/*STATS */}
       <section className="stats-section" style={{ background:'rgba(99,102,241,0.05)', borderTop:'1px solid rgba(99,102,241,0.13)', borderBottom:'1px solid rgba(99,102,241,0.13)' }}>
         <div className="section-inner" style={{ maxWidth:860 }}>
           <div className="stats-grid" style={{ display:'grid', gap:16 }}>
@@ -335,7 +335,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── CTA ─── */}
+      {/*  CTA  */}
       <section className="cta-section" style={{ textAlign:'center', position:'relative', overflow:'hidden' }}>
         <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(99,102,241,0.13) 0%, transparent 70%)' }} />
         <div style={{ position:'relative', zIndex:1, maxWidth:600, margin:'0 auto' }}>
@@ -353,7 +353,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── FOOTER ─── */}
+      {/* FOOTER  */}
       <footer style={{ background:'rgba(255,255,255,0.015)', borderTop:'1px solid rgba(255,255,255,0.07)' }}>
         <div style={{ maxWidth:1140, margin:'0 auto', padding:'64px 24px 32px' }}>
 

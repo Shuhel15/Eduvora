@@ -1,10 +1,16 @@
 import { GoogleGenAI } from '@google/genai'
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY })
+const API_KEYS = [
+  import.meta.env.VITE_GEMINI_KEY_1,
+  import.meta.env.VITE_GEMINI_KEY_2
+]
 
-// ─────────────────────────────────────────────
+function createAI(key) {
+  return new GoogleGenAI({ apiKey: key })
+}
+
 // CLASS 10 — Stream Recommendation
-// ─────────────────────────────────────────────
+
 export async function getClass10Recommendation(answers) {
   const prompt = `
 You are a professional career counsellor in India helping a Class 10 student choose their stream.
@@ -27,26 +33,40 @@ You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no
 }
 `
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-lite',
-      contents: prompt,
-    })
-    const text  = response.text.trim()
-    const clean = text.replace(/```json|```/g, '').trim()
-    return { success: true, data: JSON.parse(clean) }
-  } catch (err) {
-    console.error('Gemini Class10 error:', err)
-    if (err.message?.includes('429') || err.message?.includes('quota')) {
-      return { success: false, error: 'quota', retryAfter: 60 }
+  for (let key of API_KEYS) {
+    try {
+      const ai = createAI(key)
+
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-lite',
+        contents: prompt,
+      })
+
+      const text  = response.text.trim()
+      const clean = text.replace(/```json|```/g, '').trim()
+      return { success: true, data: JSON.parse(clean) }
+
+    } catch (err) {
+      console.error('Gemini Class10 error:', err)
+
+      if (
+        err.message?.includes('429') ||
+        err.message?.includes('quota') ||
+        err.message?.includes('API_KEY_INVALID')
+      ) {
+        continue
+      }
+
+      return { success: false, error: 'AI recommendation failed. Please try again.' }
     }
-    return { success: false, error: 'AI recommendation failed. Please try again.' }
   }
+
+  return { success: false, error: 'All API keys failed' }
 }
 
-// ─────────────────────────────────────────────
+
 // CLASS 12 — Course Recommendation
-// ─────────────────────────────────────────────
+
 export async function getClass12Recommendation(answers) {
   const prompt = `
 You are a professional career counsellor in India helping a Class 12 student choose the right college course.
@@ -88,19 +108,33 @@ You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no
 Return exactly 3 courses ordered by match score (highest first).
 `
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-lite',
-      contents: prompt,
-    })
-    const text  = response.text.trim()
-    const clean = text.replace(/```json|```/g, '').trim()
-    return { success: true, data: JSON.parse(clean) }
-  } catch (err) {
-    console.error('Gemini Class12 error:', err)
-    if (err.message?.includes('429') || err.message?.includes('quota')) {
-      return { success: false, error: 'quota', retryAfter: 60 }
+  for (let key of API_KEYS) {
+    try {
+      const ai = createAI(key)
+
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-lite',
+        contents: prompt,
+      })
+
+      const text  = response.text.trim()
+      const clean = text.replace(/```json|```/g, '').trim()
+      return { success: true, data: JSON.parse(clean) }
+
+    } catch (err) {
+      console.error('Gemini Class12 error:', err)
+
+      if (
+        err.message?.includes('429') ||
+        err.message?.includes('quota') ||
+        err.message?.includes('API_KEY_INVALID')
+      ) {
+        continue
+      }
+
+      return { success: false, error: 'AI recommendation failed. Please try again.' }
     }
-    return { success: false, error: 'AI recommendation failed. Please try again.' }
   }
+
+  return { success: false, error: 'All API keys failed' }
 }
