@@ -7,6 +7,8 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  sendEmailVerification,
+  reload
 } from 'firebase/auth'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../firebase/config'
@@ -14,12 +16,10 @@ import { auth, db, googleProvider } from '../firebase/config'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user,    setUser]    = useState(null)
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // onAuthStateChanged uses Firebase's local cache — instant on refresh
-    // Do NOT fetch Firestore here — it causes slow load every refresh
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser || null)
       setLoading(false)
@@ -30,14 +30,14 @@ export function AuthProvider({ children }) {
   // Save user to Firestore (called once on first signup/login) 
   const saveUserToFirestore = async (firebaseUser, extraData = {}) => {
     try {
-      const docRef  = doc(db, 'users', firebaseUser.uid)
+      const docRef = doc(db, 'users', firebaseUser.uid)
       const docSnap = await getDoc(docRef)
       if (!docSnap.exists()) {
         await setDoc(docRef, {
-          uid:       firebaseUser.uid,
-          name:      firebaseUser.displayName || extraData.name || '',
-          email:     firebaseUser.email,
-          photoURL:  firebaseUser.photoURL || '',
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName || extraData.name || '',
+          email: firebaseUser.email,
+          photoURL: firebaseUser.photoURL || '',
           createdAt: serverTimestamp(),
           ...extraData,
         })
@@ -57,13 +57,50 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Send Verification Email
+  const sendVerification = async () => {
+    if (auth.currentUser) {
+      try {
+        await sendEmailVerification(auth.currentUser)
+        return { success: true }
+      } catch (err) {
+        return { success: false, error: firebaseErrorMessage(err.code) }
+      }
+    }
+    return { success: false, error: "No user logged in" }
+  }
+
+  // Reload User (to check if emailVerified has changed)
+  const reloadUser = async () => {
+    if (auth.currentUser) {
+      await reload(auth.currentUser)
+      setUser({ ...auth.currentUser })
+    }
+  }
+
   //Sign Up with Email
   const signUpEmail = async (email, password, name) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
       await updateProfile(result.user, { displayName: name })
+      
+      // ✅ Send verification email
+      await sendEmailVerification(result.user)
+
       // Save to Firestore in background — don't await to keep it fast
       saveUserToFirestore(result.user, { name })
+      
+      // 🔥 WEBHOOK HERE FOR N8N
+      fetch("https://shuhel15.app.n8n.cloud/webhook-test/welcome-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name,
+          email: result.user.email
+        })
+      })
       return { success: true }
     } catch (err) {
       return { success: false, error: firebaseErrorMessage(err.code) }
@@ -74,8 +111,39 @@ export function AuthProvider({ children }) {
   const signInGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider)
-      // Save to Firestore in background
-      saveUserToFirestore(result.user)
+
+      const docRef = doc(db, 'users', result.user.uid)
+      const docSnap = await getDoc(docRef)
+
+      if (!docSnap.exists()) {
+        // first time user
+        await setDoc(docRef, {
+          uid: result.user.uid,
+          name: result.user.displayName,
+          email: result.user.email,
+          createdAt: serverTimestamp(),
+        })
+
+        // 🔥 webhook call ONLY first time
+        fetch("https://shuhel15.app.n8n.cloud/webhook-test/welcome-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: result.user.displayName,
+            email: result.user.email
+          })
+        })
+
+        // Send verification email even for Google users if requested
+        try {
+          await sendEmailVerification(result.user)
+        } catch (e) {
+          console.warn("Could not send verification to Google user:", e)
+        }
+      }
+
       return { success: true }
     } catch (err) {
       return { success: false, error: firebaseErrorMessage(err.code) }
@@ -88,7 +156,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInEmail, signUpEmail, signInGoogle, logOut }}>
+    <AuthContext.Provider value={{ user, loading, signInEmail, signUpEmail, signInGoogle, logOut, sendVerification, reloadUser }}>
       {children}
     </AuthContext.Provider>
   )
@@ -102,15 +170,15 @@ export function useAuth() {
 
 function firebaseErrorMessage(code) {
   switch (code) {
-    case 'auth/user-not-found':         return 'No account found with this email.'
-    case 'auth/wrong-password':         return 'Incorrect password. Please try again.'
-    case 'auth/invalid-credential':     return 'Incorrect email or password.'
-    case 'auth/email-already-in-use':   return 'This email is already registered. Try signing in.'
-    case 'auth/weak-password':          return 'Password must be at least 6 characters.'
-    case 'auth/invalid-email':          return 'Please enter a valid email address.'
-    case 'auth/popup-closed-by-user':   return 'Google sign-in was cancelled.'
+    case 'auth/user-not-found': return 'No account found with this email.'
+    case 'auth/wrong-password': return 'Incorrect password. Please try again.'
+    case 'auth/invalid-credential': return 'Incorrect email or password.'
+    case 'auth/email-already-in-use': return 'This email is already registered. Try signing in.'
+    case 'auth/weak-password': return 'Password must be at least 6 characters.'
+    case 'auth/invalid-email': return 'Please enter a valid email address.'
+    case 'auth/popup-closed-by-user': return 'Google sign-in was cancelled.'
     case 'auth/network-request-failed': return 'Network error. Check your connection.'
-    case 'auth/too-many-requests':      return 'Too many attempts. Please wait and try again.'
-    default:                            return 'Something went wrong. Please try again.'
+    case 'auth/too-many-requests': return 'Too many attempts. Please wait and try again.'
+    default: return 'Something went wrong. Please try again.'
   }
 }

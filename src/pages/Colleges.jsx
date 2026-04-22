@@ -47,22 +47,73 @@ async function fetchNearbyColleges(lat, lng, radiusM = 15000) {
     );
     out center tags;
   `
-  const res  = await fetch('https://overpass-api.de/api/interpreter', {
-    method:  'POST',
-    body:    `data=${encodeURIComponent(query)}`,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  })
-  const data = await res.json()
-  return data.elements || []
+
+  try {
+    const res = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      body: `data=${encodeURIComponent(query)}`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+
+    const text = await res.text()
+
+    // ❗ HTML aaya → retry
+    if (text.startsWith('<')) {
+      console.warn("Overpass returned HTML, retrying...")
+
+      await new Promise(r => setTimeout(r, 1500)) // wait 1.5 sec
+
+      const retryRes = await fetch('https://overpass-api.de/api/interpreter', {
+        method: 'POST',
+        body: `data=${encodeURIComponent(query)}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+
+      const retryText = await retryRes.text()
+
+      if (retryText.startsWith('<')) {
+        throw new Error("Overpass failed twice")
+      }
+
+      return JSON.parse(retryText).elements || []
+    }
+
+    return JSON.parse(text).elements || []
+  } catch (err) {
+    console.error(err)
+    return []
+  }
 }
 
 //  Reverse geocode with Nominatim 
 async function getAddress(lat, lng) {
   try {
-    const res  = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
-    const data = await res.json()
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+      {
+        headers: {
+          "User-Agent": "Eduvora-App (your@email.com)"
+        }
+      }
+    )
+
+    const text = await res.text()
+
+    // ❗ HTML aaya to skip
+    if (text.startsWith('<')) {
+      console.warn("Nominatim returned HTML")
+      return 'Address unavailable'
+    }
+
+    const data = JSON.parse(text)
+
     return data.display_name?.split(',').slice(0, 3).join(', ') || 'Address unavailable'
-  } catch {
+  } catch (err) {
+    console.error(err)
     return 'Address unavailable'
   }
 }
@@ -201,10 +252,10 @@ export default function Colleges() {
         .slice(0, 20)
 
       const needsAddress = raw.filter(c => !c.address).slice(0, 5)
-      await Promise.all(needsAddress.map(async c => {
-        c.address = await getAddress(c.lat, c.lng)
-      }))
-
+for (let c of needsAddress) {
+  await new Promise(r => setTimeout(r, 1000)) // 1 sec delay
+  c.address = await getAddress(c.lat, c.lng)
+}
       setColleges(raw)
       setStatus('done')
     } catch (err) {
@@ -239,6 +290,10 @@ export default function Colleges() {
   return (
     <div style={{ fontFamily: "'Sora',sans-serif", background: '#0a0a0f', color: '#f0efe8', minHeight: '100vh' }}>
       <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Roboto:wght@700;900&display=swap" rel="stylesheet" />
+      
+      {/* Background */}
+      <div style={{ position:'fixed', inset:0, background:'radial-gradient(ellipse 70% 60% at 30% 40%, rgba(99,102,241,0.13) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 70%, rgba(236,72,153,0.08) 0%, transparent 60%)', pointerEvents:'none', zIndex: -1 }} />
+      <div style={{ position:'fixed', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)', backgroundSize:'52px 52px', pointerEvents:'none', zIndex: -1 }} />
 
       <style>{`
         * { box-sizing:border-box; margin:0; padding:0; }

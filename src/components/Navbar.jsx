@@ -209,8 +209,8 @@ export default function Navbar() {
                   </button>
                   <button className="dropdown-item danger" onClick={handleLogout} disabled={loggingOut}>
                     {loggingOut
-                      ? <><div style={{ width:14, height:14, border:'2px solid rgba(248,113,113,0.3)', borderTopColor:'#f87171', borderRadius:'50%', animation:'spin 0.7s linear infinite' }} /> Signing out...</>
-                      : <><TbLogout size={16} /> Sign Out</>
+                      ? <><div style={{ width:14, height:14, border:'2px solid rgba(248,113,113,0.3)', borderTopColor:'#f87171', borderRadius:'50%', animation:'spin 0.7s linear infinite' }} /> Logging out...</>
+                      : <><TbLogout size={16} /> Logout</>
                     }
                   </button>
                 </div>
@@ -220,7 +220,7 @@ export default function Navbar() {
           ) : (
             // ── Logged out: sign in + get started ──
             <>
-              <button className="btn-ghost" onClick={() => navigate('/login')}>Sign In</button>
+              <button className="btn-ghost" onClick={() => navigate('/login')}>Login</button>
               <button className="btn-cta"   onClick={() => navigate('/login')}>
                 Get Started <FiArrowRight size={14} />
               </button>
@@ -268,8 +268,8 @@ export default function Navbar() {
               </button>
               <button className="mobile-btn-logout" onClick={handleLogout} disabled={loggingOut}>
                 {loggingOut
-                  ? <><div style={{ width:16, height:16, border:'2px solid rgba(248,113,113,0.3)', borderTopColor:'#f87171', borderRadius:'50%', animation:'spin 0.7s linear infinite' }} /> Signing out...</>
-                  : <><TbLogout size={16} /> Sign Out</>
+                  ? <><div style={{ width:16, height:16, border:'2px solid rgba(248,113,113,0.3)', borderTopColor:'#f87171', borderRadius:'50%', animation:'spin 0.7s linear infinite' }} /> Logging out...</>
+                  : <><TbLogout size={16} /> Logout</>
                 }
               </button>
             </>
@@ -277,7 +277,7 @@ export default function Navbar() {
             // Logged out mobile
             <>
               <button className="mobile-btn-ghost" onClick={() => { setMenuOpen(false); navigate('/login') }}>
-                Sign In
+                Login
               </button>
               <button className="mobile-btn-cta" onClick={() => { setMenuOpen(false); navigate('/login') }}>
                 Get Started — It's Free

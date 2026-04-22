@@ -11,7 +11,7 @@ export default function Login() {
   const navigate = useNavigate()
   const { user, loading, signInEmail, signUpEmail, signInGoogle } = useAuth()
 
-  const [tab,         setTab]         = useState('signin')
+  const [tab,         setTab]         = useState('login')
   const [showPass,    setShowPass]    = useState(false)
   const [name,        setName]        = useState('')
   const [email,       setEmail]       = useState('')
@@ -82,7 +82,7 @@ export default function Login() {
     setSubmitting(true)
     setFirebaseErr('')
 
-    const result = tab === 'signin'
+    const result = tab === 'login'
       ? await signInEmail(email, pass)
       : await signUpEmail(email, pass, name)
 
@@ -159,8 +159,8 @@ export default function Login() {
       `}</style>
 
       {/* Background */}
-      <div style={{ position:'fixed', inset:0, background:'radial-gradient(ellipse 70% 60% at 30% 40%, rgba(99,102,241,0.13) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 70%, rgba(236,72,153,0.08) 0%, transparent 60%)', pointerEvents:'none' }} />
-      <div style={{ position:'fixed', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)', backgroundSize:'52px 52px', pointerEvents:'none' }} />
+      <div style={{ position:'fixed', inset:0, background:'radial-gradient(ellipse 70% 60% at 30% 40%, rgba(99,102,241,0.13) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 70%, rgba(236,72,153,0.08) 0%, transparent 60%)', pointerEvents:'none', zIndex: -1 }} />
+      <div style={{ position:'fixed', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)', backgroundSize:'52px 52px', pointerEvents:'none', zIndex: -1 }} />
 
       <button className="back-btn" onClick={() => navigate('/')}><TbArrowLeft size={14} /> Back</button>
 
@@ -175,10 +175,10 @@ export default function Login() {
         </div>
 
         <h1 style={{ fontFamily:"'Roboto', sans-serif", fontSize:'1.8rem', fontWeight:700, marginBottom:6, lineHeight:1.2 }}>
-          {tab === 'signin' ? 'Welcome back' : 'Create account'}
+          {tab === 'login' ? 'Welcome back' : 'Create account'}
         </h1>
         <p style={{ fontSize:'0.88rem', color:'rgba(240,239,232,0.45)', marginBottom:28 }}>
-          {tab === 'signin' ? 'Sign in to continue your career journey' : 'Join Eduvora for free'}
+          {tab === 'login' ? 'Login to continue your career journey' : 'Join Eduvora for free'}
         </p>
 
         {/* Google */}
@@ -199,7 +199,7 @@ export default function Login() {
 
         {/* Tabs */}
         <div style={{ display:'flex', background:'rgba(255,255,255,0.04)', borderRadius:11, padding:4, marginBottom:20 }}>
-          <button className={`tab-btn ${tab==='signin'?'active':''}`} onClick={() => switchTab('signin')}>Sign In</button>
+          <button className={`tab-btn ${tab==='login'?'active':''}`} onClick={() => switchTab('login')}>Login</button>
           <button className={`tab-btn ${tab==='signup'?'active':''}`} onClick={() => switchTab('signup')}>Sign Up</button>
         </div>
 
@@ -243,7 +243,7 @@ export default function Login() {
         {hasError('pass') && <div className="error-msg"><TbAlertCircle size={13} /> {errors.pass}</div>}
 
         {/* Forgot password */}
-        {tab === 'signin' && (
+        {tab === 'login' && (
           <div style={{ textAlign:'right', marginBottom:16, marginTop:6 }}>
             <span style={{ fontSize:'0.8rem', color:'#a5b4fc', cursor:'pointer' }}>Forgot password?</span>
           </div>
@@ -271,17 +271,17 @@ export default function Login() {
         <button className="submit-btn" onClick={handleSubmit} disabled={submitting}>
           {submitting
             ? <><div style={{ width:16, height:16, border:'2px solid rgba(255,255,255,0.3)', borderTopColor:'#fff', borderRadius:'50%', animation:'spin 0.7s linear infinite' }} />
-                {tab === 'signin' ? 'Signing in...' : 'Creating account...'}
+                {tab === 'login' ? 'Logging in...' : 'Creating account...'}
               </>
-            : tab === 'signin' ? 'Sign In → Start Quiz' : 'Create Account'
+            : tab === 'login' ? 'Login → Start Quiz' : 'Create Account'
           }
         </button>
 
         {/* Switch tab hint */}
         <p style={{ textAlign:'center', fontSize:'0.82rem', color:'rgba(240,239,232,0.35)', marginTop:18 }}>
-          {tab === 'signin'
+          {tab === 'login'
             ? <>Don't have an account? <span style={{ color:'#a5b4fc', cursor:'pointer' }} onClick={() => switchTab('signup')}>Sign Up</span></>
-            : <>Already have an account? <span style={{ color:'#a5b4fc', cursor:'pointer' }} onClick={() => switchTab('signin')}>Sign In</span></>
+            : <>Already have an account? <span style={{ color:'#a5b4fc', cursor:'pointer' }} onClick={() => switchTab('login')}>Login</span></>
           }
         </p>
 

@@ -28,5 +28,10 @@ export default function ProtectedRoute({ children }) {
   // Only redirect AFTER loading is false and user is still null
   if (!user) return <Navigate to="/login" replace />
 
+  // If user is logged in but email is not verified, redirect to verification page
+  if (!user.emailVerified) {
+    return <Navigate to="/verify-email" replace />
+  }
+
   return children
 }

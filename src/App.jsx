@@ -11,6 +11,7 @@ import Quiz from './pages/Quiz'
 import Results from './pages/Results'
 import Colleges from './pages/Colleges'
 import Dashboard from './pages/Dashboard'
+import VerifyEmail from './pages/VerifyEmail'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -37,6 +38,7 @@ function App() {
             <Route path="/results"   element={<ProtectedRoute><Results /></ProtectedRoute>} />
             <Route path="/colleges"  element={<ProtectedRoute><Colleges /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

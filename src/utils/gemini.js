@@ -68,44 +68,43 @@ You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no
 // CLASS 12 — Course Recommendation
 
 export async function getClass12Recommendation(answers) {
-  const prompt = `
-You are a professional career counsellor in India helping a Class 12 student choose the right college course.
+const prompt = `
+Act as a career counsellor for a Class 12 student in India.
 
-The student answered these questions:
+Student answers:
 ${Object.entries(answers).map(([q, a]) => `Q${q}: ${a}`).join('\n')}
 
-Based on these answers, recommend the top 3 courses for this student in India.
-You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no explanation outside the JSON.
+Suggest the top 3 suitable courses.
+
+Respond ONLY in valid JSON (no markdown, no extra text).
 
 {
   "courses": [
     {
-      "name": "<course name e.g. B.Tech Computer Science>",
-      "match": <number 70-99>,
-      "tag": "<short tag: Engineering or Medical or Management or Law or Design>",
+      "name": "<course name>",
+      "match": <70-99>,
+      "tag": "<Engineering/Medical/Management/Law/Design>",
       "duration": "<e.g. 4 years>",
-      "why": "<2-3 sentences explaining why this course fits>",
+      "why": "<2 short sentences>",
       "jobs": [
-        { "title": "<job title>", "salary": "<e.g. Rs 6-25 LPA>", "growth": "Very High or High or Moderate or Stable" },
-        { "title": "<job title>", "salary": "<salary>", "growth": "Very High or High or Moderate or Stable" },
-        { "title": "<job title>", "salary": "<salary>", "growth": "Very High or High or Moderate or Stable" },
-        { "title": "<job title>", "salary": "<salary>", "growth": "Very High or High or Moderate or Stable" },
-        { "title": "<job title>", "salary": "<salary>", "growth": "Very High or High or Moderate or Stable" }
+        { "title": "<job>", "salary": "<salary>", "growth": "<Very High/High/Moderate/Stable>" },
+        { "title": "<job>", "salary": "<salary>", "growth": "<Very High/High/Moderate/Stable>" },
+        { "title": "<job>", "salary": "<salary>", "growth": "<Very High/High/Moderate/Stable>" }
       ],
-      "subjects": ["<subject 1>", "<subject 2>", "<subject 3>", "<subject 4>", "<subject 5>", "<subject 6>", "<subject 7>", "<subject 8>"],
+      "subjects": ["<sub1>", "<sub2>", "<sub3>", "<sub4>"],
       "roadmap": [
-        { "year": "<e.g. Year 1>", "desc": "<what student studies/does>" },
-        { "year": "<e.g. Year 2>", "desc": "<what student studies/does>" },
-        { "year": "<e.g. Year 3>", "desc": "<what student studies/does>" },
-        { "year": "<e.g. Year 4>", "desc": "<what student studies/does>" }
+        { "year": "Year 1", "desc": "<short>" },
+        { "year": "Year 2", "desc": "<short>" },
+        { "year": "Year 3", "desc": "<short>" },
+        { "year": "Year 4", "desc": "<short>" }
       ],
-      "topColleges": ["<college 1>", "<college 2>", "<college 3>", "<college 4>", "<college 5>"],
-      "exams": ["<exam 1>", "<exam 2>", "<exam 3>"]
+      "topColleges": ["<college1>", "<college2>", "<college3>"],
+      "exams": ["<exam1>", "<exam2>"]
     }
   ]
 }
 
-Return exactly 3 courses ordered by match score (highest first).
+Return exactly 3 courses sorted by match.
 `
 
   for (let key of API_KEYS) {

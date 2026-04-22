@@ -54,14 +54,14 @@ export default function Home() {
 
         /* Background */
         .mesh-bg {
-          position:absolute; inset:0; z-index:0;
+          position:fixed; inset:0; z-index:-1;
           background:
             radial-gradient(ellipse 80% 60% at 10% 20%, rgba(99,102,241,0.16) 0%, transparent 60%),
             radial-gradient(ellipse 60% 50% at 90% 80%, rgba(236,72,153,0.1)  0%, transparent 60%),
             radial-gradient(ellipse 50% 40% at 50% 50%, rgba(16,185,129,0.07) 0%, transparent 70%);
         }
         .grid-bg {
-          position:absolute; inset:0; z-index:0;
+          position:fixed; inset:0; z-index:-1;
           background-image: linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
           background-size: 52px 52px;
         }
@@ -187,10 +187,11 @@ export default function Home() {
         }
       `}</style>
 
+      <div className="mesh-bg" />
+      <div className="grid-bg" />
+
       {/*  HERO*/}
       <section className="hero-section" style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center' }}>
-        <div className="mesh-bg" />
-        <div className="grid-bg" />
 
         {/* Floating icons */}
         <div className="float-icons">
@@ -388,7 +389,7 @@ export default function Home() {
                   { label:'My Dashboard',   path:'/dashboard' },
                   { label:'Find Colleges',  path:'/colleges' },
                   { label:'View Results',   path:'/results' },
-                  { label:'Sign In',        path:'/login' },
+                  { label:'Login',        path:'/login' },
                 ].map(l => (
                   <button key={l.label} onClick={() => navigate(l.path)}
                     style={{ background:'none', border:'none', cursor:'pointer', fontSize:'0.88rem', color:'rgba(240,239,232,0.48)', textAlign:'left', padding:0, fontFamily:"'Sora',sans-serif", transition:'color 0.18s', display:'flex', alignItems:'center', gap:6 }}
@@ -417,8 +418,8 @@ export default function Home() {
           {/* Bottom row */}
           <div style={{ display:'flex', justifyContent:'center', alignItems:'center', textAlign:'center', flexWrap:'wrap', gap:14 }}>
             <p style={{ fontSize:'0.8rem', color:'rgba(240,239,232,0.28)' }}>
-              © 2025 Eduvora. Made with ❤️ for Indian students.<br></br>
-              by Shuhel Ahmed
+              © 2026 Eduvora. Made with ❤️ for Indian students.
+              by Shuhel Ahmed<br></br>
             </p>
             <div style={{ display:'flex', gap:20 }}>
               {['Privacy Policy', 'Terms of Use', 'Contact'].map(l => (

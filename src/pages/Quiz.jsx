@@ -126,7 +126,9 @@ export default function Quiz() {
       </div>
 
       <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'32px 16px', position:'relative' }}>
-        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse 60% 50% at 20% 30%, rgba(99,102,241,0.1) 0%, transparent 60%)', pointerEvents:'none' }} />
+        {/* Background */}
+        <div style={{ position:'fixed', inset:0, background:'radial-gradient(ellipse 70% 60% at 30% 40%, rgba(99,102,241,0.13) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 70%, rgba(236,72,153,0.08) 0%, transparent 60%)', pointerEvents:'none', zIndex: -1 }} />
+        <div style={{ position:'fixed', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)', backgroundSize:'52px 52px', pointerEvents:'none', zIndex: -1 }} />
 
         {/* Grade selection */}
         {!grade && (
