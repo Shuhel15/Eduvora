@@ -59,11 +59,11 @@ async function fetchNearbyColleges(lat, lng, radiusM = 15000) {
 
     const text = await res.text()
 
-    // ❗ HTML aaya → retry
+    //  HTML  → retry
     if (text.startsWith('<')) {
       console.warn("Overpass returned HTML, retrying...")
 
-      await new Promise(r => setTimeout(r, 1500)) // wait 1.5 sec
+      await new Promise(r => setTimeout(r, 1500)) 
 
       const retryRes = await fetch('https://overpass-api.de/api/interpreter', {
         method: 'POST',
@@ -103,7 +103,7 @@ async function getAddress(lat, lng) {
 
     const text = await res.text()
 
-    // ❗ HTML aaya to skip
+    //if html is returned instead of json, return a default message
     if (text.startsWith('<')) {
       console.warn("Nominatim returned HTML")
       return 'Address unavailable'
@@ -253,7 +253,7 @@ export default function Colleges() {
 
       const needsAddress = raw.filter(c => !c.address).slice(0, 5)
 for (let c of needsAddress) {
-  await new Promise(r => setTimeout(r, 1000)) // 1 sec delay
+  await new Promise(r => setTimeout(r, 1000)) 
   c.address = await getAddress(c.lat, c.lng)
 }
       setColleges(raw)
@@ -374,9 +374,7 @@ for (let c of needsAddress) {
 
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          {/* <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 100, padding: '5px 13px', marginBottom: 12, fontSize: '0.78rem', color: '#a5b4fc' }}>
-            <TbMapPin size={12} /> Powered by OpenStreetMap · 100% Free
-          </div> */}
+
           <h1 style={{ fontFamily: "'Roboto',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 700, marginBottom: 8, lineHeight: 1.2 }}>
             Find Colleges Near You
           </h1>

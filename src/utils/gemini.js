@@ -12,37 +12,52 @@ function createAI(key) {
 // CLASS 10 — Stream Recommendation
 
 export async function getClass10Recommendation(answers) {
-  const prompt = `
-You are a professional career counsellor in India helping a Class 10 student choose their stream.
+const prompt = `
+You are an expert career counsellor in India helping Class 10 students choose the best stream.
 
-The student answered these questions:
+Student's Answers:
 ${Object.entries(answers).map(([q, a]) => `Q${q}: ${a}`).join('\n')}
 
-Based on these answers, recommend the best stream for this student.
-You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no explanation outside the JSON.
+Analyze all answers based on interests, strengths, favorite subjects, abilities, and career goals.
 
+Stream guidelines:
+- Science: Maths, Science, Technology, Engineering, Medicine, Research.
+- Commerce: Business, Finance, Accounting, Economics, Management, Entrepreneurship.
+- Arts: History, Psychology, Sociology, Political Science, Law, Languages, Media, Design.
+
+Rules:
+- Recommend the stream that best matches the student's overall profile.
+- Do not assume Science is always better.
+- Give a realistic match score based on the answers.
+- Recommended match: 80-99.
+- Second choice match: 55-79.
+- Second choice must be different from recommended.
+- Strengths and tips must be relevant to the student's answers.
+- Return ONLY valid JSON. No markdown, no explanation outside JSON.
+
+Return exactly this format:
 {
-  "recommended": "Science" or "Commerce" or "Arts",
-  "match": <number between 70-99>,
-  "why": "<2-3 sentences explaining why this stream suits them>",
-  "secondChoice": "Science" or "Commerce" or "Arts",
-  "secondMatch": <number between 50-75>,
-  "secondWhy": "<1-2 sentences about second choice>",
-  "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
-  "tips": ["<tip 1>", "<tip 2>", "<tip 3>"]
+  "recommended": "Science/Commerce/Arts",
+  "match": 85,
+  "why": "2-3 sentences explaining why this stream suits the student.",
+  "secondChoice": "Science/Commerce/Arts",
+  "secondMatch": 65,
+  "secondWhy": "1-2 sentences explaining the second choice.",
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "tips": ["tip 1", "tip 2", "tip 3"]
 }
-`
+`;
 
   for (let key of API_KEYS) {
     try {
       const ai = createAI(key)
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite',
+        model: 'gemini-3.5-flash-lite',
         contents: prompt,
       })
 
-      const text  = response.text.trim()
+      const text = response.text.trim()
       const clean = text.replace(/```json|```/g, '').trim()
       return { success: true, data: JSON.parse(clean) }
 
@@ -68,7 +83,7 @@ You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no
 // CLASS 12 — Course Recommendation
 
 export async function getClass12Recommendation(answers) {
-const prompt = `
+  const prompt = `
 Act as a career counsellor for a Class 12 student in India.
 
 Student answers:
@@ -112,11 +127,11 @@ Return exactly 3 courses sorted by match.
       const ai = createAI(key)
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite',
+        model: 'gemini-3.5-flash-lite',
         contents: prompt,
       })
 
-      const text  = response.text.trim()
+      const text = response.text.trim()
       const clean = text.replace(/```json|```/g, '').trim()
       return { success: true, data: JSON.parse(clean) }
 

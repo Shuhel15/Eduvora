@@ -125,7 +125,7 @@ export function AuthProvider({ children }) {
         })
 
         // 🔥 webhook call ONLY first time
-        fetch("https://shuhel15.app.n8n.cloud/webhook-test/welcome-user", {
+        fetch("http://localhost:5678/webhook-test/991404ef-2cd6-49c2-bcef-520535e9951e", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
