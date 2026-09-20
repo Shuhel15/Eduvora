@@ -7,11 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
-model User{
-  id String @id @default(cuid())
-  name String?
-  email String? @unique
-  image String?
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  image         String?
   emailVerified DateTime?
 
   assesments Assessment[]
@@ -20,43 +21,42 @@ model User{
   updatedAt DateTime @updatedAt
 }
 
-model Assessment{
-  id String @id @default(cuid())
-  class Int
+model Assessment {
+  id     String @id @default(cuid())
+  class  Int
   status String @default("IN_PROGRESS")
   userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  marks Mark[]
+  marks       Mark[]
   quizAnswers QuizAnswer[]
-  aiResult Json?
+  aiResult    Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
-
 }
 
-model Mark{
-  id String @id @default(cuid())
-  subject String
+model Mark {
+  id            String @id @default(cuid())
+  subject       String
   marksObtained Float
-  maxMarks Float
+  maxMarks      Float
 
   assessmentId String
-  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   @@index([assessmentId])
 }
 
-model QuizAnswer{
-  id String @id @default(cuid())
+model QuizAnswer {
+  id         String @id @default(cuid())
   questionId String
-  answer String
+  answer     String
 
   assessmentId String
-  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   @@index([assessmentId])
 }
