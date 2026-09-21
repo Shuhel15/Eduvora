@@ -18,7 +18,7 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 px-4 pt-5">
         <nav
           aria-label="Main navigation"
-          className="flex min-h-14 items-center justify-between rounded-lg border border-black/10 bg-white/70 px-3.5 shadow-lg backdrop-blur-xl sm:min-h-16 sm:rounded-lg sm:px-6 dark:border-white/10 dark:bg-black/60"
+          className="flex min-h-14 items-center justify-between rounded-xl border border-black/10 bg-white/70 px-3.5 shadow-lg backdrop-blur-xl sm:min-h-16 sm:px-6 dark:border-white/10 dark:bg-black/60"
         >
           <Link
             href="/"

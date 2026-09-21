@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-
 import "./globals.css";
-
 import { Providers } from "@/components/providers";
 import NavBar from "@/components/ui/NavBar";
+import FloatingBackground from "@/components/ui/FloatingBackground";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -85,9 +84,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.variable} antialiased`}>
         <Providers>
-          <NavBar />
-          {children}
-          </Providers>
+          <div className="relative min-h-screen overflow-hidden">
+            <FloatingBackground />
+            <div className="relative z-10">
+              <NavBar />
+              {children}
+            </div>
+          </div>
+        </Providers>
       </body>
     </html>
   );
