@@ -1,14 +1,15 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Container } from "../container";
 
-export default function VerifyOtpPage() {
+function VerifyOtpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -36,6 +37,7 @@ export default function VerifyOtpPage() {
       toast.error("Please enter a valid 6-digit OTP.");
       return;
     }
+
     setLoading(true);
 
     try {
@@ -66,6 +68,7 @@ export default function VerifyOtpPage() {
 
   async function hadleResendOtp() {
     if (!email || countdown > 0) return;
+
     setResending(true);
 
     try {
@@ -83,7 +86,9 @@ export default function VerifyOtpPage() {
         toast.error(data.message || "Failed to resend OTP.");
         return;
       }
+
       toast.success("New OTP sent to your email!");
+      setCountdown(60);
     } catch (error) {
       console.error("Error resending OTP:", error);
       toast.error("An error occurred. Please try again.");
@@ -95,7 +100,7 @@ export default function VerifyOtpPage() {
   return (
     <Container>
       <form onSubmit={handleVerify}>
-        <div className="flex flex-col gap-3 justify-between mt-10">
+        <div className="mt-10 flex flex-col justify-between gap-3">
           <label htmlFor="otp">Enter OTP</label>
 
           <input
@@ -106,7 +111,9 @@ export default function VerifyOtpPage() {
             maxLength={6}
             value={otp}
             onChange={(event) => {
-              const value = event.target.value.replace(/\D/g, "").slice(0, 6);
+              const value = event.target.value
+                .replace(/\D/g, "")
+                .slice(0, 6);
 
               setOtp(value);
             }}
@@ -114,12 +121,17 @@ export default function VerifyOtpPage() {
             className="w-full border px-4 py-3 text-center text-xl tracking-[0.5em] outline-none"
           />
 
-          <button type="submit" disabled={loading || otp.length !== 6}>
+          <button
+            type="submit"
+            disabled={loading || otp.length !== 6}
+          >
             {loading ? "Verifying..." : "Verify OTP"}
           </button>
 
           {countdown > 0 ? (
-            <p className="text-center">Resend OTP in {countdown}s</p>
+            <p className="text-center">
+              Resend OTP in {countdown}s
+            </p>
           ) : (
             <button
               type="button"
@@ -133,5 +145,13 @@ export default function VerifyOtpPage() {
         </div>
       </form>
     </Container>
+  );
+}
+
+export default function VerifyOtpForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOtpContent />
+    </Suspense>
   );
 }

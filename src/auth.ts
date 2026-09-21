@@ -12,6 +12,9 @@ const loginSchema = z.object({
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+  signIn: "/login",
+},
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,

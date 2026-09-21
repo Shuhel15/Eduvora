@@ -1,4 +1,4 @@
-import LogoutButton from "@/components/auth/LogoutButton";
+import AuthButton from "@/components/auth/AuthButton";
 
 export default function Home() {
   return (
@@ -9,7 +9,7 @@ export default function Home() {
         <p className="mt-3 text-gray-500">
           AI-powered career guidance for students
         </p>
-        <LogoutButton />
+        <AuthButton />
       </div>
     </main>
   );

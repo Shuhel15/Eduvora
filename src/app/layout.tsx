@@ -4,6 +4,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 
 import { Providers } from "@/components/providers";
+import NavBar from "@/components/ui/NavBar";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -83,7 +84,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.variable} antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <NavBar />
+          {children}
+          </Providers>
       </body>
     </html>
   );
