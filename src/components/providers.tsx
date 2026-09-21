@@ -15,7 +15,7 @@ export function Providers({
       enableSystem
     >
       {children}
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
     </ThemeProvider>
   );
 }
