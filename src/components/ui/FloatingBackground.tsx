@@ -132,7 +132,7 @@ export default function FloatingBackground() {
         return (
           <motion.div
             key={index}
-            className={`absolute ${item.position} hidden h-11 w-11 items-center justify-center rounded-xl border backdrop-blur-md sm:flex ${
+            className={`absolute ${item.position}  h-11 w-11 items-center justify-center rounded-xl border backdrop-blur-md flex ${
               styles[item.style as keyof typeof styles]
             }`}
             animate={{

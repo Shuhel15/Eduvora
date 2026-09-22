@@ -1,6 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./theme-provider";
 
 export function Providers({
@@ -10,7 +11,8 @@ export function Providers({
 }) {
   return <SessionProvider>
     <ThemeProvider>
-    {children}
+      {children}
+      <Toaster position="top-center" />
     </ThemeProvider>
-    </SessionProvider>;
+  </SessionProvider>;
 }

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { GraduationCap } from "lucide-react";
-import ClassSelection from "@/components/class/class-selection";
+import ClassSelection from "@/components/assessment/class-selection";
 import { Container } from "@/components/container";
 
 export const metadata: Metadata = {
