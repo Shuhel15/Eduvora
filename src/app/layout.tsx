@@ -84,8 +84,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.variable} antialiased`}>
         <Providers>
-          <div className="relative min-h-screen overflow-hidden">
+          <div className="relative min-h-screen">
             <FloatingBackground />
+
             <div className="relative z-10">
               <NavBar />
               {children}

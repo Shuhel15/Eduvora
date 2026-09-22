@@ -3,7 +3,6 @@ import { useState, FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Container } from "../container";
 import Link from "next/link";
 
 export default function RegisterForm() {
@@ -50,7 +49,6 @@ export default function RegisterForm() {
   };
 
   return (
-    <Container>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-3 justify-between mt-10">
           <label htmlFor="email">Name</label>
@@ -114,6 +112,5 @@ export default function RegisterForm() {
           </Link>
         </div>
       </form>
-    </Container>
   );
 }

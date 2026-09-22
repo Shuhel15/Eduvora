@@ -4,7 +4,6 @@ import { useState, FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Container } from "../container";
 import Link from "next/link";
 
 export default function LoginForm() {
@@ -45,7 +44,6 @@ export default function LoginForm() {
   }
 
   return (
-    <Container>
       <form onSubmit={handleSubmit}>
         <div className="mt-10 flex flex-col justify-between gap-3">
           <label htmlFor="email">Email</label>
@@ -94,6 +92,5 @@ export default function LoginForm() {
           </Link>
         </div>
       </form>
-    </Container>
   );
 }

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import RegisterForm from "@/components/auth/Register";
+import { Container } from "@/components/container";
 
 export const metadata: Metadata = {
   title: "Register | Eduvora",
@@ -12,10 +13,11 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
+    <Container>
     <main>
       <section
         aria-labelledby="register-heading"
-        className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 py-12 sm:px-6 lg:px-8"
+        className="flex min-h-screen flex-col items-center justify-center "
       >
         <div className="flex flex-col justify-center">
           <header className="text-center">
@@ -33,5 +35,6 @@ export default function RegisterPage() {
         </div>
       </section>
     </main>
+    </Container>
   );
 }

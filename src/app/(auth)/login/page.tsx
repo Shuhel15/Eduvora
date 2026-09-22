@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import LoginForm from "@/components/auth/Login";
+import { Container } from "@/components/container";
 
 export const metadata: Metadata = {
-  title: "Login | Eduvora",
+  title: "Login",
   description: "Sign in to your Eduvora account.",
   robots: {
     index: false,
@@ -12,10 +13,11 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
+    <Container>
     <main>
       <section
         aria-labelledby="login-heading"
-        className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 py-12 sm:px-6 lg:px-8"
+        className="flex min-h-screen flex-col items-center justify-center"
       >
         <div className="flex flex-col justify-center">
           <header className="text-center">
@@ -34,5 +36,6 @@ export default function LoginPage() {
         </div>
       </section>
     </main>
+    </Container>
   );
 }

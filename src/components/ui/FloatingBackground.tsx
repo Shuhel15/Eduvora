@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import {
   FlaskConical,
   Target,
@@ -127,12 +130,25 @@ export default function FloatingBackground() {
         const Icon = item.icon;
 
         return (
-          <div
+          <motion.div
             key={index}
-            className={`absolute ${item.position} hidden h-11 w-11 items-center justify-center rounded-xl border backdrop-blur-md sm:flex ${styles[item.style as keyof typeof styles]}`}
+            className={`absolute ${item.position} hidden h-11 w-11 items-center justify-center rounded-xl border backdrop-blur-md sm:flex ${
+              styles[item.style as keyof typeof styles]
+            }`}
+            animate={{
+              y: [0, -12, 0, 10, 0],
+              x: [0, 4, -4, 3, 0],
+              rotate: [0, 2, -2, 1, 0],
+            }}
+            transition={{
+              duration: 5 + (index % 4),
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: index * 0.25,
+            }}
           >
             <Icon className="h-5 w-5" />
-          </div>
+          </motion.div>
         );
       })}
     </div>

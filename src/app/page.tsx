@@ -1,4 +1,4 @@
-import AuthButton from "@/components/auth/AuthButton";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -9,7 +9,12 @@ export default function Home() {
         <p className="mt-3 text-gray-500">
           AI-powered career guidance for students
         </p>
-        <AuthButton />
+        <Link
+        href="/assessment/class"
+        >
+          Get Started
+        </Link>
+
       </div>
     </main>
   );

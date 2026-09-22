@@ -3,7 +3,6 @@
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Container } from "../container";
 
 function VerifyOtpContent() {
   const router = useRouter();
@@ -98,7 +97,6 @@ function VerifyOtpContent() {
   }
 
   return (
-    <Container>
       <form onSubmit={handleVerify}>
         <div className="mt-10 flex flex-col justify-between gap-3">
           <label htmlFor="otp">Enter OTP</label>
@@ -144,7 +142,6 @@ function VerifyOtpContent() {
           )}
         </div>
       </form>
-    </Container>
   );
 }
 
