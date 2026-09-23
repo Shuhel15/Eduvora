@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Marks | Eduvora",
+  title: "Marks",
   description: "Add marks for students in class 10 and 12.",
   robots: {
     index: false,

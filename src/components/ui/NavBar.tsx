@@ -14,8 +14,8 @@ export default function Navbar() {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-5">
-      <Container>
+    <header className="sticky top-0 z-50 pt-5">
+      <Container className="max-w-360" >
         <nav
           aria-label="Main navigation"
           className="flex min-h-14 items-center justify-between rounded-xl border border-black/10 bg-white/70 px-3.5 shadow-lg backdrop-blur-xl sm:min-h-16 sm:px-6 dark:border-white/10 dark:bg-black/60"
@@ -27,7 +27,10 @@ export default function Navbar() {
             className="flex items-center gap-2 text-xl font-bold tracking-tight text-black dark:text-white"
           >
             <div className="group bg-linear-to-br from-purple-600 to-purple-500 p-1.5 rounded-lg text-white">
-              <Compass size={25} className="group-hover:transition-transform group-hover:rotate-180 duration-300" />
+              <Compass
+                size={25}
+                className="group-hover:transition-transform group-hover:rotate-180 duration-300"
+              />
             </div>
             Eduvora
           </Link>

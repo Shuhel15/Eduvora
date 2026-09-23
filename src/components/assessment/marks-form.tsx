@@ -72,38 +72,50 @@ export default function MarksForm() {
     );
   }
 
-  function handleContinue() {
-    if (classLevel !== "10" && classLevel !== "12") {
-      toast.error("Please select your class first.");
-      router.push("/assessment/class");
-      return;
-    }
-
-    const parsed = marksSchema.safeParse({
-      classLevel,
-      subjects,
-    });
-
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message || "Invalid marks.");
-      return;
-    }
-
-    const hasInvalidMarks = subjects.some(
-      (item) => item.marks < 0 || item.marks > 100,
-    );
-
-    if (hasInvalidMarks) {
-      toast.error("Marks must be between 0 and 100.");
-      return;
-    }
-
-    const encodedData = encodeURIComponent(
-      JSON.stringify(parsed.data.subjects),
-    );
-
-    router.push(`/assessment/quiz?class=${classLevel}&marks=${encodedData}`);
+ function handleContinue() {
+  if (classLevel !== "10" && classLevel !== "12") {
+    toast.error("Please select your class first.");
+    router.push("/assessment/class");
+    return;
   }
+
+  const parsed = marksSchema.safeParse({
+    classLevel,
+    subjects,
+  });
+
+  if (!parsed.success) {
+    toast.error(parsed.error.issues[0]?.message || "Invalid marks.");
+    return;
+  }
+
+  const hasInvalidMarks = subjects.some(
+    (item) => item.marks < 0 || item.marks > 100,
+  );
+
+  if (hasInvalidMarks) {
+    toast.error("Marks must be between 0 and 100.");
+    return;
+  }
+
+  const assessmentMarks = {
+    classLevel,
+    subjects: parsed.data.subjects,
+  };
+
+  sessionStorage.setItem(
+    "eduvora-assessment-marks",
+    JSON.stringify(assessmentMarks),
+  );
+
+  const encodedData = encodeURIComponent(
+    JSON.stringify(parsed.data.subjects),
+  );
+
+  router.push(
+    `/assessment/quiz?class=${classLevel}&marks=${encodedData}`,
+  );
+}
 
   if (classLevel !== "10" && classLevel !== "12") {
     return (
