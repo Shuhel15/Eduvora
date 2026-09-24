@@ -72,7 +72,7 @@ export default function MarksForm() {
     );
   }
 
- function handleContinue() {
+function handleContinue() {
   if (classLevel !== "10" && classLevel !== "12") {
     toast.error("Please select your class first.");
     router.push("/assessment/class");
@@ -85,7 +85,9 @@ export default function MarksForm() {
   });
 
   if (!parsed.success) {
-    toast.error(parsed.error.issues[0]?.message || "Invalid marks.");
+    toast.error(
+      parsed.error.issues[0]?.message || "Invalid marks.",
+    );
     return;
   }
 
@@ -108,13 +110,7 @@ export default function MarksForm() {
     JSON.stringify(assessmentMarks),
   );
 
-  const encodedData = encodeURIComponent(
-    JSON.stringify(parsed.data.subjects),
-  );
-
-  router.push(
-    `/assessment/quiz?class=${classLevel}&marks=${encodedData}`,
-  );
+  router.push(`/assessment/quiz?class=${classLevel}`);
 }
 
   if (classLevel !== "10" && classLevel !== "12") {

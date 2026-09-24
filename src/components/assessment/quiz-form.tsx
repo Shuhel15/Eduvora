@@ -4,6 +4,7 @@ import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { assessmentSchema } from "@/validations/assessment";
 
 import { class10Quiz } from "@/data/quiz/class10";
 import { class12Quiz } from "@/data/quiz/class12";
@@ -145,15 +146,24 @@ function handleSubmit() {
     answer: answers[question.id],
   }));
 
-  const assessmentData = {
+  const parsedAssessment = assessmentSchema.safeParse({
     classLevel,
     marks: marksData.subjects,
     quizAnswers,
-  };
+  });
+
+  if (!parsedAssessment.success) {
+    toast.error(
+      parsedAssessment.error.issues[0]?.message ||
+        "Invalid assessment data.",
+    );
+
+    return;
+  }
 
   sessionStorage.setItem(
     "eduvora-assessment-data",
-    JSON.stringify(assessmentData),
+    JSON.stringify(parsedAssessment.data),
   );
 
   toast.success("Quiz completed!");
