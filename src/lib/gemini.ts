@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-
 import { assessmentResultSchema } from "@/validations/assessment-result";
 import type { AssessmentInput } from "@/types/assessment";
 import { buildAssessmentPrompt } from "@/lib/prompts/assessment";
@@ -22,14 +21,11 @@ export const geminiClients = [
 
 let currentClient = 0;
 
-export async function generateCareerResult(
-  input: AssessmentInput,
-) {
+export async function generateCareerResult(input: AssessmentInput) {
   const prompt = buildAssessmentPrompt(input);
 
   for (let attempt = 0; attempt < geminiClients.length; attempt++) {
-    const clientIndex =
-      (currentClient + attempt) % geminiClients.length;
+    const clientIndex = (currentClient + attempt) % geminiClients.length;
 
     try {
       const response = await geminiClients[clientIndex].models.generateContent({
@@ -48,28 +44,23 @@ export async function generateCareerResult(
 
       const parsed = JSON.parse(text);
 
-      const validated =
-        assessmentResultSchema.safeParse(parsed);
+      const validated = assessmentResultSchema.safeParse(parsed);
 
       if (!validated.success) {
-        throw new Error(
-          "Gemini response failed validation.",
-        );
+        console.error("Gemini validation errors:", validated.error.flatten());
+
+        console.error("Gemini raw response:", text);
+
+        throw new Error("Gemini response failed validation.");
       }
 
-      currentClient =
-        (clientIndex + 1) % geminiClients.length;
+      currentClient = (clientIndex + 1) % geminiClients.length;
 
       return validated.data;
     } catch (error) {
-      console.error(
-        `Gemini API ${clientIndex + 1} failed:`,
-        error,
-      );
+      console.error(`Gemini API ${clientIndex + 1} failed:`, error);
     }
   }
 
-  throw new Error(
-    "All Gemini API keys failed. Please try again.",
-  );
+  throw new Error("All Gemini API keys failed. Please try again.");
 }

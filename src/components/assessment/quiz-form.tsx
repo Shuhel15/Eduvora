@@ -4,8 +4,7 @@ import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { assessmentSchema } from "@/validations/assessment";
-
+// import { assessmentSchema } from "@/validations/assessment";
 import { class10Quiz } from "@/data/quiz/class10";
 import { class12Quiz } from "@/data/quiz/class12";
 import type { QuizQuestions } from "@/types/quiz";
@@ -21,7 +20,7 @@ function QuizContent() {
       return class10Quiz;
     }
 
-    if (classLevel === "12") {
+    if (classLevel === "12") { 
       return class12Quiz;
     }
 
@@ -87,89 +86,119 @@ function QuizContent() {
     setCurrentQuestion((previous) => previous + 1);
   }
 
-function handleSubmit() {
-  const unansweredQuestion = questions.find(
-    (item) => !answers[item.id],
-  );
+  async function handleSubmit() {
+    const unansweredQuestion = questions.find((item) => !answers[item.id]);
 
-  if (unansweredQuestion) {
-    const unansweredIndex = questions.findIndex(
-      (item) => item.id === unansweredQuestion.id,
-    );
+    if (unansweredQuestion) {
+      const unansweredIndex = questions.findIndex(
+        (item) => item.id === unansweredQuestion.id,
+      );
 
-    setCurrentQuestion(unansweredIndex);
+      setCurrentQuestion(unansweredIndex);
 
-    toast.error("Please answer all questions before submitting.");
+      toast.error("Please answer all questions before submitting.");
+      return;
+    }
 
-    return;
+    const savedMarks = sessionStorage.getItem("eduvora-assessment-marks");
+
+    if (!savedMarks) {
+      toast.error("Marks data not found. Please enter your marks again.");
+
+      router.push(`/assessment/marks?class=${classLevel}`);
+      return;
+    }
+
+    let marksData: {
+      classLevel: string;
+      subjects: {
+        subject: string;
+        marks: number;
+      }[];
+    };
+
+    try {
+      marksData = JSON.parse(savedMarks);
+    } catch {
+      toast.error("Invalid marks data. Please enter your marks again.");
+
+      sessionStorage.removeItem("eduvora-assessment-marks");
+
+      router.push(`/assessment/marks?class=${classLevel}`);
+      return;
+    }
+
+    const quizAnswers = questions.map((question) => ({
+      questionId: question.id,
+      question: question.question,
+      answer: answers[question.id],
+    }));
+
+    const assessmentData = {
+      classLevel,
+      marks: marksData.subjects,
+      quizAnswers,
+    };
+
+    try {
+      toast.loading("Generating your personalized career result...", {
+        id: "generate-result",
+      });
+
+      const response = await fetch("/api/assessment/result", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(assessmentData),
+      });
+
+      const contentType = response.headers.get("content-type") ?? "";
+
+      if (!response.ok || !contentType.includes("application/json")) {
+        const text = await response.text();
+
+        throw new Error(
+          text && text.includes("<!DOCTYPE")
+            ? "The assessment API is unavailable. Please try again."
+            : text || "Failed to generate assessment result.",
+        );
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || "Failed to generate assessment result.");
+      }
+
+      sessionStorage.setItem(
+        "eduvora-assessment-data",
+        JSON.stringify(assessmentData),
+      );
+
+      sessionStorage.setItem(
+        "eduvora-assessment-result",
+        JSON.stringify(data.result),
+      );
+
+      toast.success("Career result generated successfully!", {
+        id: "generate-result",
+      });
+
+      router.push(`/assessment/result?class=${classLevel}`);
+    } catch (error) {
+      console.error("Assessment generation error:", error);
+
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to generate your result.",
+        {
+          id: "generate-result",
+        },
+      );
+    }
   }
-
-  const savedMarks = sessionStorage.getItem(
-    "eduvora-assessment-marks",
-  );
-
-  if (!savedMarks) {
-    toast.error(
-      "Marks data not found. Please enter your marks again.",
-    );
-
-    router.push(`/assessment/marks?class=${classLevel}`);
-
-    return;
-  }
-
-  let marksData: {
-    classLevel: string;
-    subjects: {
-      subject: string;
-      marks: number;
-    }[];
-  };
-
-  try {
-    marksData = JSON.parse(savedMarks);
-  } catch {
-    toast.error(
-      "Invalid marks data. Please enter your marks again.",
-    );
-
-    sessionStorage.removeItem("eduvora-assessment-marks");
-
-    router.push(`/assessment/marks?class=${classLevel}`);
-
-    return;
-  }
-
-  const quizAnswers = questions.map((question) => ({
-    questionId: question.id,
-    question: question.question,
-    answer: answers[question.id],
-  }));
-
-  const parsedAssessment = assessmentSchema.safeParse({
-    classLevel,
-    marks: marksData.subjects,
-    quizAnswers,
-  });
-
-  if (!parsedAssessment.success) {
-    toast.error(
-      parsedAssessment.error.issues[0]?.message ||
-        "Invalid assessment data.",
-    );
-
-    return;
-  }
-
-  sessionStorage.setItem(
-    "eduvora-assessment-data",
-    JSON.stringify(parsedAssessment.data),
-  );
-
-  toast.success("Quiz completed!");
-
-  router.push(`/assessment/result?class=${classLevel}`);
-}
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 

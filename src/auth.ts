@@ -3,7 +3,6 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-
 import prisma from "@/lib/prisma";
 
 const loginSchema = z.object({
@@ -13,8 +12,31 @@ const loginSchema = z.object({
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
-  signIn: "/login",
-},
+    signIn: "/login",
+  },
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
+      }
+
+      return session;
+    },
+
+    authorized({ auth }) {
+      return !!auth?.user;
+    },
+  },
+
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -54,7 +76,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const passwordMatch = await bcrypt.compare(
           password,
-          user.password
+          user.password,
         );
 
         if (!passwordMatch) {
