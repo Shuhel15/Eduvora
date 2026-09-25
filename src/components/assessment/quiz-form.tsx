@@ -167,25 +167,12 @@ function QuizContent() {
 
       const data = await response.json();
 
-      if (!data.success) {
+      if(!response.ok || !data.success){
         throw new Error(data.error || "Failed to generate assessment result.");
       }
 
-      sessionStorage.setItem(
-        "eduvora-assessment-data",
-        JSON.stringify(assessmentData),
-      );
-
-      sessionStorage.setItem(
-        "eduvora-assessment-result",
-        JSON.stringify(data.result),
-      );
-
-      toast.success("Career result generated successfully!", {
-        id: "generate-result",
-      });
-
-      router.push(`/assessment/result?class=${classLevel}`);
+      toast.success("Assessment completed!");
+      router.push(`/assessment/result?id=${data.assessmentId}`);
     } catch (error) {
       console.error("Assessment generation error:", error);
 
