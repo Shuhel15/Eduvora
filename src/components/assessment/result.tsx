@@ -3,14 +3,18 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
+  ArrowLeft,
+  ArrowRight,
   BookOpen,
   BriefcaseBusiness,
   CheckCircle2,
+  Clock3,
   GraduationCap,
   Lightbulb,
   Map,
   School,
   Sparkles,
+  Star,
   Target,
   Trophy,
 } from "lucide-react";
@@ -159,7 +163,7 @@ function ResultLoader({
         {/* Header */}
         <div className="mb-10 flex items-center flex-col gap-3 text-center">
           <p className=" text-sm font-semibold flex flex-row items-center gap-2 rounded-full px-2 py-1 text-emerald-500 bg-emerald-500/25 border-2 border-emerald-500">
-            <Sparkles size={18} />
+            <Sparkles size={18} className="text-yellow-500 fill-yellow-500" />
             AI Analysis Complete
           </p>
           <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
@@ -181,9 +185,7 @@ function ResultLoader({
   );
 }
 
-/* =========================
-   CLASS 10 RESULT
-========================= */
+// CLASS 10 RESULT
 
 function Class10Result({
   result,
@@ -202,22 +204,20 @@ function Class10Result({
 
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8">
-      {/* Header */}
       {/* Recommended Stream */}
       <article className="overflow-hidden rounded-2xl border-2 border-pink-500/30 bg-pink-500/10 hover:scale-102 duration-300 ease-in-out">
         {/* Stream Header */}
         <div className="p-5 sm:p-7">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
             <div className="flex gap-4">
-              {/* Icon */}
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-pink-500/30 bg-pink-500/10">
-                <Sparkles className="h-5 w-5 text-yellow-400" />
+                <Sparkles className="h-5 w-5 text-yellow-400 fill-yellow-500" />
               </div>
 
               <div>
                 {/* AI Recommended */}
                 <div className="mb-2 inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-400">
-                  <Sparkles className="h-3 w-3 text-yellow-300" />
+                  <Sparkles className="h-3 w-3 text-yellow-300 fill-yellow-500" />
                   AI Recommended
                 </div>
 
@@ -362,7 +362,8 @@ function Class10Result({
         </p>
       </section>
       <p className="mt-3 text-sm  text-gray-300 dark:text-gray-600 text-center">
-        AI-generated results based on your responses. For personalized advice, consult a counselor or academic advisor.
+        AI-generated results based on your responses. For personalized advice,
+        consult a counselor or academic advisor.
       </p>
     </div>
   );
@@ -394,181 +395,250 @@ function ResultCard({
   );
 }
 
-/* =========================
-   CLASS 12 RESULT
-========================= */
+// CLASS 12 RESULT
 
-function Class12Result({
+export function Class12Result({
   result,
 }: {
   result: Extract<AssessmentResult, { classLevel: "12" }>;
 }) {
-  return (
-    <div className="space-y-8">
-      <section>
-        <div className="mb-5 flex items-center gap-3 flex-row justify-between">
-          <h2 className="text-2xl font-bold flex flex-row items-center text-center gap-2">
-            <GraduationCap className="h-6 w-6 text-purple-500" />
-            Recommended Streams
-          </h2>
-          <p className="w-fit rounded-full border-2 border-yellow-500/25 bg-amber-400/40 px-3 py-1 text-sm font-semibold text-yellow-500">
-            Class 12
-          </p>
-        </div>
+  const [selectedCourse, setSelectedCourse] = useState<
+    (typeof result.recommendedCourses)[number] | null
+  >(null);
 
-        <div className="grid gap-5">
-          {result.recommendedCourses.map((course) => (
-            <article
-              key={course.course}
-              className="border-2 border-black/10 p-5 dark:border-white/10 sm:p-7"
-            >
-              {/* Course Header */}
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">
-                    Recommended Course
-                  </p>
+  // COURSE DETAIL VIEW
 
-                  <h3 className="mt-1 text-2xl font-black">{course.course}</h3>
-                </div>
+  if (selectedCourse) {
+    return (
+      <div className="mx-auto w-full max-w-5xl space-y-7">
+        {/* Back */}
+        <button
+          type="button"
+          onClick={() => setSelectedCourse(null)}
+          className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-5 py-2.5 text-sm font-semibold transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to courses
+        </button>
 
-                <div className="w-fit border-2 border-emerald-500/30 bg-emerald-500/10 px-4 py-2">
-                  <p className="text-xs font-semibold text-gray-500">Match</p>
-
-                  <p className="text-2xl font-black text-emerald-500">
-                    {course.matchPercentage}%
-                  </p>
-                </div>
+        {/* Course Header */}
+        <section className="rounded-3xl border border-purple-500/30 bg-purple-500/5 p-6 sm:p-8">
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start">
+            <div>
+              {/* Category */}
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-400">
+                <GraduationCap className="h-3.5 w-3.5" />
+                Recommended Course
               </div>
 
-              {/* About Degree */}
-              <ResultTextSection
-                icon={<BookOpen className="h-5 w-5" />}
-                title="About Degree"
-                text={course.aboutDegree}
-              />
+              <h2 className="text-2xl font-black leading-tight sm:text-4xl">
+                {selectedCourse.course}
+              </h2>
 
-              {/* Jobs */}
-              <div className="mt-8">
-                <div className="flex items-center gap-3">
-                  <BriefcaseBusiness className="h-5 w-5" />
-
-                  <h4 className="font-bold">Jobs & Salary</h4>
-                </div>
-
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {course.jobs.map((job) => (
-                    <div
-                      key={`${job.role}-${job.salaryINR}`}
-                      className="border border-black/10 p-4 dark:border-white/10"
-                    >
-                      <p className="font-semibold">{job.role}</p>
-
-                      <p className="mt-1 text-sm text-emerald-500">
-                        {job.salaryINR}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+              <div className="mt-3 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <Clock3 className="h-4 w-4" />
+                Degree / Course
               </div>
+            </div>
 
-              {/* Subjects */}
-              <ResultListSection
-                icon={<BookOpen className="h-5 w-5" />}
-                title="Subjects"
-                items={course.subjects}
-              />
+            {/* Match */}
+            <div className="shrink-0 text-left sm:text-right">
+              <p className="bg-linear-to-br from-blue-500 to-purple-400 bg-clip-text text-4xl font-black text-transparent sm:text-5xl">
+                {selectedCourse.matchPercentage}%
+              </p>
 
-              {/* Roadmap */}
-              <ResultListSection
-                icon={<Map className="h-5 w-5" />}
-                title="Roadmap"
-                items={course.roadmap}
-                numbered
-              />
+              <p className="text-xs font-semibold text-gray-500">AI Match</p>
+            </div>
+          </div>
 
-              {/* Colleges */}
-              <ResultListSection
-                icon={<School className="h-5 w-5" />}
-                title="Top Colleges"
-                items={course.topColleges}
-              />
+          {/* About */}
+          <div className="mt-6 rounded-2xl bg-black/5 p-5 dark:bg-white/5">
+            <div className="mb-2 flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-purple-400" />
 
-              {/* Exams */}
-              <ResultListSection
-                icon={<Target className="h-5 w-5" />}
-                title="Entrance Exams"
-                items={course.entranceExams}
-              />
-            </article>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
+              <h3 className="text-sm font-bold">About this degree</h3>
+            </div>
 
-/* =========================
-   REUSABLE UI
-========================= */
+            <p className="text-sm leading-7 text-gray-600 dark:text-gray-300">
+              {selectedCourse.aboutDegree}
+            </p>
+          </div>
+        </section>
 
-function ResultListSection({
-  icon,
-  title,
-  items,
-  numbered = false,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  items: string[];
-  numbered?: boolean;
-}) {
-  return (
-    <div className="mt-8 ">
-      <div></div>
-      <div className="flex items-center gap-3">
-        {icon}
+        {/* Jobs & Salary */}
+        <ResultCard
+          icon={<BriefcaseBusiness className="h-4 w-4" />}
+          title="Jobs & Salary"
+        >
+          <div className="grid gap-3 sm:grid-cols-2">
+            {selectedCourse.jobs.map((job, index) => (
+              <div
+                key={`${job.role}-${index}`}
+                className="rounded-xl border border-black/10 bg-black/2 p-4 dark:border-white/10 dark:bg-white/2"
+              >
+                <p className="font-semibold">{job.role}</p>
 
-        <h4 className="font-bold">{title}</h4>
-      </div>
+                <p className="mt-1 text-sm font-medium text-emerald-500">
+                  {job.salaryINR}
+                </p>
+              </div>
+            ))}
+          </div>
+        </ResultCard>
 
-      <ul className="mt-4 space-y-2">
-        {items.map((item, index) => (
-          <li
-            key={`${title}-${item}-${index}`}
-            className="flex gap-3 border rounded-xl border-black/10 p-3 text-sm dark:border-white/10"
+        {/* Subjects + Entrance Exams */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <ResultCard icon={<BookOpen className="h-4 w-4" />} title="Subjects">
+            <div className="flex flex-wrap gap-2">
+              {selectedCourse.subjects.map((subject, index) => (
+                <span
+                  key={`${subject}-${index}`}
+                  className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs font-medium text-purple-300"
+                >
+                  {subject}
+                </span>
+              ))}
+            </div>
+          </ResultCard>
+
+          <ResultCard
+            icon={<Target className="h-4 w-4" />}
+            title="Entrance Exams"
           >
-            <span className="font-semibold text-purple-500">
-              {numbered ? `${index + 1}.` : "•"}
-            </span>
+            <ul className="space-y-3">
+              {selectedCourse.entranceExams.map((exam, index) => (
+                <li
+                  key={`${exam}-${index}`}
+                  className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300"
+                >
+                  <span className="mt-0.5 text-purple-400">✓</span>
 
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+                  <span>{exam}</span>
+                </li>
+              ))}
+            </ul>
+          </ResultCard>
+        </div>
 
-function ResultTextSection({
-  icon,
-  title,
-  text,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  text: string;
-}) {
+        {/* Roadmap */}
+        <ResultCard icon={<Map className="h-4 w-4" />} title="Career Roadmap">
+          <ol className="space-y-4">
+            {selectedCourse.roadmap.map((step, index) => (
+              <li key={`${step}-${index}`} className="flex items-start gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-xs font-bold text-purple-400">
+                  {index + 1}
+                </span>
+
+                <span className="pt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </ResultCard>
+
+        {/* Colleges */}
+        <ResultCard icon={<School className="h-4 w-4" />} title="Top Colleges">
+          <div className="grid gap-3 sm:grid-cols-2">
+            {selectedCourse.topColleges.map((college, index) => (
+              <div
+                key={`${college}-${index}`}
+                className="rounded-xl border border-black/10 p-4 dark:border-white/10"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-xs font-bold text-blue-500">
+                    {index + 1}
+                  </span>
+
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {college}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ResultCard>
+      </div>
+    );
+  }
+
+  // COURSE LIST VIEW
+
   return (
-    <div className="mt-8">
-      <div className="flex items-center gap-3">
-        {icon}
+    <div className="mx-auto w-full max-w-5xl space-y-8">
+      {/* Course Cards */}
+      <div className="space-y-4">
+        {result.recommendedCourses.map((course, index) => {
+          const isTopPick = index === 0;
 
-        <h4 className="font-bold">{title}</h4>
+          return (
+            <button
+              key={course.course}
+              type="button"
+              onClick={() => setSelectedCourse(course)}
+              className={`
+                group w-full rounded-2xl border p-5 text-left transition-all duration-300 hover:scale-102  ease-in-out sm:p-6
+                ${
+                  isTopPick
+                    ? "border-purple-500 bg-purple-500/25"
+                    : "border-black/10 bg-black/2 dark:border-white/10 dark:bg-white/2"
+                }
+              `}
+            >
+              <div className="flex items-center justify-between gap-5">
+                {/* Left */}
+                <div className="min-w-0 flex-1">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="rounded-full border border-blue-500 bg-blue-500/25 px-3 py-1 text-xs font-semibold text-blue-500">
+                      Course
+                    </span>
+
+                    {isTopPick && (
+                      <span className="rounded-full flex flex-row items-center text-center gap-1 border border-emerald-500 bg-emerald-500/25 px-3 py-1 text-xs font-semibold text-emerald-500">
+                        <Star
+                          size={15}
+                          className="text-yellow-500 fill-yellow-500"
+                        />{" "}
+                        Top Pick
+                      </span>
+                    )}
+
+                    <span className="flex items-center gap-1 text-xs font-semibold text-gray-500">
+                      <Clock3 className="h-3.5 w-3.5" />
+                      Degree
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-black leading-tight sm:text-2xl">
+                    {course.course}
+                  </h3>
+
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-500 dark:text-gray-400">
+                    {course.aboutDegree}
+                  </p>
+                </div>
+
+                {/* Right */}
+                <div className="flex shrink-0 items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-3xl font-black text-blue-400 sm:text-4xl">
+                      {course.matchPercentage}%
+                    </p>
+
+                    <p className="text-xs text-gray-500">AI Match</p>
+                  </div>
+
+                  <ArrowRight className="h-5 w-5 text-gray-500 transition-transform group-hover:translate-x-1 group-hover:text-purple-400" />
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
-      <p className="mt-4 border border-black/10 p-4 text-sm leading-relaxed dark:border-white/10">
-        {text}
+      {/* Bottom Hint */}
+      <p className="text-center text-sm text-gray-500 animate-bounce">
+        Tap any course to explore jobs, salary, roadmap and colleges
       </p>
     </div>
   );
