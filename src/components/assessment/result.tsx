@@ -361,7 +361,7 @@ function Class10Result({
           {result.motivation}
         </p>
       </section>
-      <p className="mt-3 text-sm  text-gray-300 dark:text-gray-600 text-center">
+      <p className="mt-30 text-sm text-gray-300 dark:text-gray-600 text-center">
         AI-generated results based on your responses. For personalized advice,
         consult a counselor or academic advisor.
       </p>
@@ -415,18 +415,18 @@ export function Class12Result({
         <button
           type="button"
           onClick={() => setSelectedCourse(null)}
-          className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-5 py-2.5 text-sm font-semibold transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+          className="group inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-5 py-2.5 text-sm font-semibold transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to courses
+          <ArrowLeft className="group-hover:transition-transform group-hover:-translate-x-1 h-4 w-4 duration-300" />
+          Back
         </button>
 
         {/* Course Header */}
-        <section className="rounded-3xl border border-purple-500/30 bg-purple-500/5 p-6 sm:p-8">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start">
+        <section className="rounded-3xl border border-emerald-500 bg-emerald-500/25 p-6 sm:p-8 hover:scale-102 duration-300 ease-in-out">
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start ">
             <div>
               {/* Category */}
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-400">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-purple-500 bg-purple-500/25 px-3 py-1 text-xs font-semibold text-purple-500 ">
                 <GraduationCap className="h-3.5 w-3.5" />
                 Recommended Course
               </div>
@@ -442,7 +442,7 @@ export function Class12Result({
             </div>
 
             {/* Match */}
-            <div className="shrink-0 text-left sm:text-right">
+            <div className="shrink-0 sm:text-right flex flex-col text-center items-center">
               <p className="bg-linear-to-br from-blue-500 to-purple-400 bg-clip-text text-4xl font-black text-transparent sm:text-5xl">
                 {selectedCourse.matchPercentage}%
               </p>
@@ -452,7 +452,7 @@ export function Class12Result({
           </div>
 
           {/* About */}
-          <div className="mt-6 rounded-2xl bg-black/5 p-5 dark:bg-white/5">
+          <div className="mt-6 rounded-2xl bg-white p-5 dark:bg-white/10">
             <div className="mb-2 flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-purple-400" />
 
@@ -467,8 +467,9 @@ export function Class12Result({
 
         {/* Jobs & Salary */}
         <ResultCard
-          icon={<BriefcaseBusiness className="h-4 w-4" />}
+          icon={<BriefcaseBusiness className="h-4 w-4 text-emerald-500" />}
           title="Jobs & Salary"
+          className="hover:scale-102 duration-300 ease-in-out"
         >
           <div className="grid gap-3 sm:grid-cols-2">
             {selectedCourse.jobs.map((job, index) => (
@@ -488,12 +489,16 @@ export function Class12Result({
 
         {/* Subjects + Entrance Exams */}
         <div className="grid gap-4 md:grid-cols-2">
-          <ResultCard icon={<BookOpen className="h-4 w-4" />} title="Subjects">
+          <ResultCard
+            icon={<BookOpen className="h-4 w-4 text-yellow-500 " />}
+            title="Subjects"
+            className="border-yellow-500! bg-yellow-500/25! hover:scale-102 duration-300 ease-in-out"
+          >
             <div className="flex flex-wrap gap-2">
               {selectedCourse.subjects.map((subject, index) => (
                 <span
                   key={`${subject}-${index}`}
-                  className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs font-medium text-purple-300"
+                  className="rounded-full border border-yellow-500 bg-yellow-500/25 px-3 py-1.5 text-xs font-medium text-yellow-500"
                 >
                   {subject}
                 </span>
@@ -504,6 +509,7 @@ export function Class12Result({
           <ResultCard
             icon={<Target className="h-4 w-4" />}
             title="Entrance Exams"
+            className="hover:scale-102 duration-300 ease-in-out"
           >
             <ul className="space-y-3">
               {selectedCourse.entranceExams.map((exam, index) => (
@@ -521,7 +527,11 @@ export function Class12Result({
         </div>
 
         {/* Roadmap */}
-        <ResultCard icon={<Map className="h-4 w-4" />} title="Career Roadmap">
+        <ResultCard
+          icon={<Map className="h-4 w-4" />}
+          title="Career Roadmap"
+          className="border-purple-500! bg-purple-500/25! hover:scale-102 duration-300 ease-in-out"
+        >
           <ol className="space-y-4">
             {selectedCourse.roadmap.map((step, index) => (
               <li key={`${step}-${index}`} className="flex items-start gap-3">
@@ -538,7 +548,11 @@ export function Class12Result({
         </ResultCard>
 
         {/* Colleges */}
-        <ResultCard icon={<School className="h-4 w-4" />} title="Top Colleges">
+        <ResultCard
+          icon={<School className="h-4 w-4 text-blue-500" />}
+          title="Top Colleges"
+          className="hover:scale-102 duration-300 ease-in-out"
+        >
           <div className="grid gap-3 sm:grid-cols-2">
             {selectedCourse.topColleges.map((college, index) => (
               <div
@@ -558,6 +572,10 @@ export function Class12Result({
             ))}
           </div>
         </ResultCard>
+        <p className="mt-30 text-sm text-gray-300 dark:text-gray-600 text-center">
+          AI-generated results based on your responses. For personalized advice,
+          consult a counselor or academic advisor.
+        </p>
       </div>
     );
   }
@@ -639,6 +657,10 @@ export function Class12Result({
       {/* Bottom Hint */}
       <p className="text-center text-sm text-gray-500 animate-bounce">
         Tap any course to explore jobs, salary, roadmap and colleges
+      </p>
+      <p className="mt-30 text-sm  text-gray-300 dark:text-gray-600 text-center">
+        AI-generated results based on your responses. For personalized advice,
+        consult a counselor or academic advisor.
       </p>
     </div>
   );
