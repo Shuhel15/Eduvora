@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { getOtp, deleteOtp } from "@/lib/otp";
 
 const verifyOtpSchem = z.object({

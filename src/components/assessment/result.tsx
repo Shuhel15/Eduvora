@@ -605,7 +605,7 @@ export function Class12Result({
       <p className="text-center text-sm text-gray-500 animate-bounce">
         Tap any course to explore jobs, salary, roadmap and colleges
       </p>
-      <p className="mt-30 text-sm  text-gray-300 dark:text-gray-600 text-center">
+      <p className=" text-sm  text-gray-300 dark:text-gray-600 text-center">
         AI-generated results based on your responses. For personalized advice,
         consult a counselor or academic advisor.
       </p>

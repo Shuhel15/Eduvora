@@ -1,4 +1,6 @@
 import type { AssessmentResult } from "@/validations/assessment-result";
+import { assessmentResultSchema } from "@/validations/assessment-result";
+
 
 export type AssessmentData = {
   classLevel: "10" | "12";
@@ -50,4 +52,12 @@ export type AssessmentResponse = {
     questionId: string;
     answer: string;
   }[];
+};
+
+export type Assessment = {
+  id: string;
+  class: number;
+  status: string;
+  aiResult: unknown;
+  createdAt: Date | string;
 };

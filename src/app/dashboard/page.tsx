@@ -1,15 +1,51 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+import type { Metadata } from "next";
 
-export default async function dashboard() {
-  const session = await auth()
-  if(!session) redirect("/login")
+import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
+import { Container } from "@/components/container";
+import { prisma } from "@/lib/prisma";
+import Dashboard from "@/components/dashboard/dashboard";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "User's dashboard page",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+export default async function DashboardPage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  const assessments = await prisma.assessment.findMany({
+    where: {
+      userId: session.user.id,
+      status: "COMPLETED",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      class: true,
+      status: true,
+      aiResult: true,
+      createdAt: true,
+    },
+  });
+
   return (
-    <div>
-      <h1>
-        Welcome to the Dashboard
-        
-      </h1>
-    </div>
-  )
+    <Container>
+      <Dashboard
+        userName={session.user.name ?? "Student"}
+        assessments={assessments}
+      />
+    </Container>
+  );
 }
