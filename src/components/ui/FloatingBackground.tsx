@@ -104,20 +104,13 @@ const icons = [
 ];
 
 const styles = {
-  purple:
-    "border-purple-500/20 bg-purple-500/10 text-purple-400",
-  emerald:
-    "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
-  yellow:
-    "border-yellow-500/20 bg-yellow-500/10 text-yellow-400",
-  pink:
-    "border-pink-500/20 bg-pink-500/10 text-pink-400",
-  blue:
-    "border-blue-500/20 bg-blue-500/10 text-blue-400",
-  cyan:
-    "border-cyan-500/20 bg-cyan-500/10 text-cyan-400",
-  orange:
-    "border-orange-500/20 bg-orange-500/10 text-orange-400",
+  purple: "border-purple-500/20 bg-purple-500/10 text-purple-400",
+  emerald: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
+  yellow: "border-yellow-500/20 bg-yellow-500/10 text-yellow-400",
+  pink: "border-pink-500/20 bg-pink-500/10 text-pink-400",
+  blue: "border-blue-500/20 bg-blue-500/10 text-blue-400",
+  cyan: "border-cyan-500/20 bg-cyan-500/10 text-cyan-400",
+  orange: "border-orange-500/20 bg-orange-500/10 text-orange-400",
 };
 
 export default function FloatingBackground() {

@@ -1,8 +1,6 @@
 import type { AssessmentInput } from "@/types/assessment";
 
-export function buildAssessmentPrompt(
-  input: AssessmentInput,
-): string {
+export function buildAssessmentPrompt(input: AssessmentInput): string {
   const marks = input.marks
     .map((item) => `${item.subject}:${item.marks}`)
     .join(",");

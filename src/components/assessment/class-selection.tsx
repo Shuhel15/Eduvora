@@ -22,15 +22,15 @@ export default function ClassSelection() {
         onClick={() => setSelectedClass("10")}
         className={`group rounded-lg border-2 p-6 text-center transition-all ${
           selectedClass === "10"
-            ? "border-purple-500 bg-purple-400/70"
-            : "border-black/20 bg-white duration-200 hover:-translate-y-1 hover:border-purple-500 hover:bg-purple-400/40 active:scale-95 dark:border-white/20 dark:bg-black"
+            ? "border-purple-500 bg-purple-500/25"
+            : "bg-purple-500/10! border-purple-500/25! duration-200 hover:-translate-y-1 hover:border-purple-500 hover:bg-purple-400/40 active:scale-95 dark:border-white/20 dark:bg-black"
         }`}
       >
         <p className="text-sm font-semibold ">Secondary School</p>
 
         <h2 className="flex flex-col items-center mt-2 text-2xl font-black">
           <span className="p-3 rounded-xl bg-purple-600/30">
-            <BookOpen size={30} />
+            <BookOpen size={30} className="text-white" />
           </span>
           Class 10
         </h2>
@@ -45,17 +45,15 @@ export default function ClassSelection() {
         onClick={() => setSelectedClass("12")}
         className={`group rounded-lg border-2 p-6 text-center transition-all ${
           selectedClass === "12"
-            ? "border-emerald-500 bg-emerald-400/70"
-            : "border-black/20 bg-white duration-200 hover:-translate-y-1 hover:border-emerald-500 hover:bg-emerald-400/40 active:scale-95 dark:border-white/20 dark:bg-black"
+            ? "border-emerald-500 bg-emerald-500/25"
+            : "bg-emerald-500/10! border-emerald-500/25! duration-200 hover:-translate-y-1 hover:border-emerald-500 hover:bg-emerald-400/40 active:scale-95 dark:border-white/20 dark:bg-black"
         }`}
       >
-        <p className="text-sm font-semibold ">
-          Senior Secondary School
-        </p>
+        <p className="text-sm font-semibold ">Senior Secondary School</p>
 
         <h2 className="flex flex-col items-center mt-2 text-2xl font-black">
           <span className="p-3 rounded-xl bg-emerald-700/60">
-            <GraduationCap size={30} />
+            <GraduationCap size={30} className="text-white" />
           </span>
           Class 12
         </h2>

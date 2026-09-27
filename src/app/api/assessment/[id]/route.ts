@@ -30,9 +30,12 @@ export async function GET(request: Request, { params }: RouteContext) {
         id,
         userId: session.user.id,
       },
-      include: {
-        marks: true,
-        quizAnswers: true,
+      select: {
+        id: true,
+        class: true,
+        status: true,
+        aiResult: true,
+        createdAt: true,
       },
     });
 
@@ -44,6 +47,14 @@ export async function GET(request: Request, { params }: RouteContext) {
         },
         { status: 404 },
       );
+    }
+
+    if(!assessment.aiResult) {
+      return NextResponse.json({
+        success: false,
+        error:"Assessment result is not available yet."
+      },
+      { status: 404 });
     }
 
     return NextResponse.json({

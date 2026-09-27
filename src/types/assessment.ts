@@ -19,7 +19,6 @@ export type ResultPageProps = {
   }>;
 };
 
-
 export interface AssessmentInput {
   classLevel: "10" | "12";
   marks: {

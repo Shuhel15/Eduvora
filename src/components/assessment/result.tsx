@@ -18,26 +18,8 @@ import {
   Target,
   Trophy,
 } from "lucide-react";
-
 import type { AssessmentResult } from "@/validations/assessment-result";
-
-type AssessmentResponse = {
-  id: string;
-  class: number;
-  status: string;
-  aiResult: AssessmentResult | null;
-  marks: {
-    id: string;
-    subject: string;
-    marksObtained: number;
-    maxMarks: number;
-  }[];
-  quizAnswers: {
-    id: string;
-    questionId: string;
-    answer: string;
-  }[];
-};
+import type { AssessmentResponse } from "@/types/assessment";
 
 export default function ResultContent() {
   const searchParams = useSearchParams();
@@ -47,47 +29,9 @@ export default function ResultContent() {
 
   const [error, setError] = useState<string | null>(null);
 
-  if (!assessmentId) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Result not found</h1>
-
-          <p className="mt-2 text-gray-500">Assessment ID not found.</p>
-        </div>
-      </main>
-    );
-  }
-
-  return (
-    <ResultLoader
-      assessmentId={assessmentId}
-      assessment={assessment}
-      setAssessment={setAssessment}
-      error={error}
-      setError={setError}
-    />
-  );
-}
-
-type ResultLoaderProps = {
-  assessmentId: string;
-  assessment: AssessmentResponse | null;
-  setAssessment: React.Dispatch<
-    React.SetStateAction<AssessmentResponse | null>
-  >;
-  error: string | null;
-  setError: React.Dispatch<React.SetStateAction<string | null>>;
-};
-
-function ResultLoader({
-  assessmentId,
-  assessment,
-  setAssessment,
-  error,
-  setError,
-}: ResultLoaderProps) {
   useEffect(() => {
+    if (!assessmentId) return;
+
     let cancelled = false;
 
     async function loadAssessment() {
@@ -121,13 +65,25 @@ function ResultLoader({
     return () => {
       cancelled = true;
     };
-  }, [assessmentId, setAssessment, setError]);
+  }, [assessmentId]);
+
+  if (!assessmentId) {
+    return (
+      <main className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Result not found</h1>
+
+          <p className="mt-2 text-gray-500">Assessment ID not found.</p>
+        </div>
+      </main>
+    );
+  }
 
   if (error) {
     return (
       <main className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Result not found</h1>
+          <h1 className="text-2xl font-bold">Unable to load result</h1>
 
           <p className="mt-2 text-gray-500">{error}</p>
         </div>
@@ -138,18 +94,10 @@ function ResultLoader({
   if (!assessment) {
     return (
       <main className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-500">Loading your assessment result...</p>
-      </main>
-    );
-  }
-
-  if (!assessment.aiResult) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Result not available</h1>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
 
-          <p className="mt-2 text-gray-500">AI result could not be found.</p>
+          <p className="mt-4 text-sm text-gray-500">Loading your result...</p>
         </div>
       </main>
     );
@@ -157,24 +105,23 @@ function ResultLoader({
 
   const result = assessment.aiResult;
 
-  return (
-    <main className="min-h-screen py-12">
-      <div className="mx-auto max-w-5xl px-4 ">
-        {/* Header */}
-        <div className="mb-10 flex items-center flex-col gap-3 text-center">
-          <p className=" text-sm font-semibold flex flex-row items-center gap-2 rounded-full px-2 py-1 text-emerald-500 bg-emerald-500/25 border-2 border-emerald-500">
-            <Sparkles size={18} className="text-yellow-500 fill-yellow-500" />
-            AI Analysis Complete
-          </p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-            Your Career Assessment Result
-          </h1>
+  if (!result) {
+    return (
+      <main className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Result not available</h1>
 
-          <p className="mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
-            Based on your marks and assessment responses , AI recommends
+          <p className="mt-2 text-gray-500">
+            Your assessment result is not available yet.
           </p>
         </div>
+      </main>
+    );
+  }
 
+  return (
+    <main className="min-h-screen py-12">
+      <div className="mx-auto w-full max-w-6xl px-4">
         {result.classLevel === "10" ? (
           <Class10Result result={result} />
         ) : (
@@ -431,7 +378,7 @@ export function Class12Result({
                 Recommended Course
               </div>
 
-              <h2 className="text-2xl font-black leading-tight sm:text-4xl">
+              <h2 className="text-2xl font-black  sm:text-4xl">
                 {selectedCourse.course}
               </h2>
 

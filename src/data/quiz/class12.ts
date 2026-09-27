@@ -1,4 +1,4 @@
-import { QuizQuestions } from "@/types/quiz"
+import { QuizQuestions } from "@/types/quiz";
 
 export const class12Quiz: QuizQuestions[] = [
   {

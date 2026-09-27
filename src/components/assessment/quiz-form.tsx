@@ -4,7 +4,6 @@ import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { toast } from "react-hot-toast";
-// import { assessmentSchema } from "@/validations/assessment";
 import { class10Quiz } from "@/data/quiz/class10";
 import { class12Quiz } from "@/data/quiz/class12";
 import type { QuizQuestions } from "@/types/quiz";
@@ -20,7 +19,7 @@ function QuizContent() {
       return class10Quiz;
     }
 
-    if (classLevel === "12") { 
+    if (classLevel === "12") {
       return class12Quiz;
     }
 
@@ -167,11 +166,14 @@ function QuizContent() {
 
       const data = await response.json();
 
-      if(!response.ok || !data.success){
+      if (!data.success) {
         throw new Error(data.error || "Failed to generate assessment result.");
       }
 
-      toast.success("Assessment completed!");
+      toast.success("Assessment completed!", {
+        id: "generate-result",
+      });
+
       router.push(`/assessment/result?id=${data.assessmentId}`);
     } catch (error) {
       console.error("Assessment generation error:", error);

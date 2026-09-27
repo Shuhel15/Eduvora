@@ -1,4 +1,4 @@
-import { QuizQuestions } from "@/types/quiz"
+import { QuizQuestions } from "@/types/quiz";
 
 export const class10Quiz: QuizQuestions[] = [
   {
@@ -14,12 +14,7 @@ export const class10Quiz: QuizQuestions[] = [
   {
     id: "c10-q2",
     question: "Which subject do you enjoy studying the most?",
-    options: [
-      "Mathematics",
-      "Science",
-      "Social Science",
-      "Languages",
-    ],
+    options: ["Mathematics", "Science", "Social Science", "Languages"],
   },
   {
     id: "c10-q3",
@@ -101,4 +96,4 @@ export const class10Quiz: QuizQuestions[] = [
       "I enjoy interacting with people",
     ],
   },
-]
+];

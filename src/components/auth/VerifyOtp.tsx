@@ -97,51 +97,44 @@ function VerifyOtpContent() {
   }
 
   return (
-      <form onSubmit={handleVerify}>
-        <div className="mt-10 flex flex-col justify-between gap-3">
-          <label htmlFor="otp">Enter OTP</label>
+    <form onSubmit={handleVerify}>
+      <div className="mt-10 flex flex-col justify-between gap-3">
+        <label htmlFor="otp">Enter OTP</label>
 
-          <input
-            id="otp"
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={6}
-            value={otp}
-            onChange={(event) => {
-              const value = event.target.value
-                .replace(/\D/g, "")
-                .slice(0, 6);
+        <input
+          id="otp"
+          type="text"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={6}
+          value={otp}
+          onChange={(event) => {
+            const value = event.target.value.replace(/\D/g, "").slice(0, 6);
 
-              setOtp(value);
-            }}
-            placeholder="Enter 6-digit OTP"
-            className="w-full border px-4 py-3 text-center text-xl tracking-[0.5em] outline-none"
-          />
+            setOtp(value);
+          }}
+          placeholder="Enter 6-digit OTP"
+          className="w-full border px-4 py-3 text-center text-xl tracking-[0.5em] outline-none"
+        />
 
+        <button type="submit" disabled={loading || otp.length !== 6}>
+          {loading ? "Verifying..." : "Verify OTP"}
+        </button>
+
+        {countdown > 0 ? (
+          <p className="text-center">Resend OTP in {countdown}s</p>
+        ) : (
           <button
-            type="submit"
-            disabled={loading || otp.length !== 6}
+            type="button"
+            onClick={hadleResendOtp}
+            disabled={resending}
+            className="text-center text-blue-500 underline"
           >
-            {loading ? "Verifying..." : "Verify OTP"}
+            {resending ? "Sending..." : "Resend OTP"}
           </button>
-
-          {countdown > 0 ? (
-            <p className="text-center">
-              Resend OTP in {countdown}s
-            </p>
-          ) : (
-            <button
-              type="button"
-              onClick={hadleResendOtp}
-              disabled={resending}
-              className="text-center text-blue-500 underline"
-            >
-              {resending ? "Sending..." : "Resend OTP"}
-            </button>
-          )}
-        </div>
-      </form>
+        )}
+      </div>
+    </form>
   );
 }
 

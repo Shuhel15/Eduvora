@@ -44,53 +44,53 @@ export default function LoginForm() {
   }
 
   return (
-      <form onSubmit={handleSubmit}>
-        <div className="mt-10 flex flex-col justify-between gap-3">
-          <label htmlFor="email">Email</label>
+    <form onSubmit={handleSubmit}>
+      <div className="mt-10 flex flex-col justify-between gap-3">
+        <label htmlFor="email">Email</label>
 
-          <input
-            type="email"
-            id="email"
-            autoComplete="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <input
+          type="email"
+          id="email"
+          autoComplete="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-          <label htmlFor="password">Password</label>
+        <label htmlFor="password">Password</label>
 
-          <input
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <input
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-          <div className="my-2 flex items-center gap-3">
-            <div className="h-px flex-1 bg-gray-300" />
-            <span className="text-sm text-gray-500">OR</span>
-            <div className="h-px flex-1 bg-gray-300" />
-          </div>
-
-          <button type="button" onClick={handleGoogleLogin}>
-            Continue with Google
-          </button>
-
-          <Link
-            href="/register"
-            className="text-center text-sm text-gray-500 transition-colors duration-200 hover:text-gray-700"
-          >
-            Don&apos;t have an account? Register
-          </Link>
+        <div className="my-2 flex items-center gap-3">
+          <div className="h-px flex-1 bg-gray-300" />
+          <span className="text-sm text-gray-500">OR</span>
+          <div className="h-px flex-1 bg-gray-300" />
         </div>
-      </form>
+
+        <button type="button" onClick={handleGoogleLogin}>
+          Continue with Google
+        </button>
+
+        <Link
+          href="/register"
+          className="text-center text-sm text-gray-500 transition-colors duration-200 hover:text-gray-700"
+        >
+          Don&apos;t have an account? Register
+        </Link>
+      </div>
+    </form>
   );
 }

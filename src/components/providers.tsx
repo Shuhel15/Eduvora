@@ -4,15 +4,13 @@ import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./theme-provider";
 
-export function Providers({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <SessionProvider>
-    <ThemeProvider>
-      {children}
-      <Toaster position="top-center" />
-    </ThemeProvider>
-  </SessionProvider>;
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionProvider>
+      <ThemeProvider>
+        {children}
+        <Toaster position="top-center" />
+      </ThemeProvider>
+    </SessionProvider>
+  );
 }

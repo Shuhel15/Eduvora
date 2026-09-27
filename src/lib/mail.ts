@@ -9,7 +9,7 @@ const smtpPassword = process.env.SMTP_PASSWORD ?? process.env.SMTP_PASS;
 
 if (!smtpHost || !smtpUser || !smtpPassword) {
   throw new Error(
-    "Missing SMTP configuration. Set SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in .env."
+    "Missing SMTP configuration. Set SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in .env.",
   );
 }
 
