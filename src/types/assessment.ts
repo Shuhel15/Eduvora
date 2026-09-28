@@ -1,6 +1,4 @@
 import type { AssessmentResult } from "@/validations/assessment-result";
-import { assessmentResultSchema } from "@/validations/assessment-result";
-
 
 export type AssessmentData = {
   classLevel: "10" | "12";

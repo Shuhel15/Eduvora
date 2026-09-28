@@ -6,6 +6,7 @@ import {
   CalendarDays,
   GraduationCap,
   History,
+  Scale,
   Sparkles,
   Target,
   Trophy,
@@ -173,6 +174,13 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
               Your completed career assessments
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => router.push("/courses/compare")}
+            className="flex flex-row items-center gap-2 w-fit px-2 py-1 border rounded-xl border-emerald-500 text-emerald-500 bg-emerald-500/25 hover:scale-103 duration-300 ease-in-out active:scale-100"
+          >
+            <Scale className="h-5 w-5 text-yellow-500" />Compare Courses
+          </button>
         </div>
 
         {assessments.length === 0 ? (
@@ -201,7 +209,7 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
               return (
                 <article
                   key={assessment.id}
-                  className="group rounded-2xl border border-black/10 bg-white p-5 transition hover:border-purple-500/30 hover:shadow-lg dark:border-white/10 dark:bg-white/5 sm:p-6"
+                  className="group rounded-2xl border border-black/10 bg-white p-5 transition hover:border-purple-500/30 hover:shadow-lg dark:border-white/10 dark:bg-white/5 sm:p-6 hover:scale-102 duration-300 ease-in-out"
                 >
                   <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                     {/* Left */}
@@ -256,10 +264,10 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
                         onClick={() =>
                           router.push(`/assessment/result?id=${assessment.id}`)
                         }
-                        className="flex items-center gap-2 rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold transition hover:border-purple-500 hover:text-purple-500 dark:border-white/10"
+                        className="group flex items-center gap-2 rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold transition hover:border-purple-500 hover:text-purple-500 dark:border-white/10"
                       >
                         View Result
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                       </button>
                     </div>
                   </div>
@@ -285,7 +293,7 @@ function StatCard({
   description: string;
 }) {
   return (
-    <article className="rounded-2xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-white/5">
+    <article className="rounded-2xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-white/5 hover:scale-103 duration-300 ease-in-out ">
       <div className="flex items-start justify-between">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500">
           {icon}
