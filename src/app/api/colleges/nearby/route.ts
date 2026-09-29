@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       out center tags;
     `;
 
-    
+
     const response = await fetch("https://overpass-api.de/api/interpreter", {
       method: "POST",
       headers: {
@@ -160,6 +160,7 @@ async function getMatrixDetails(
   colleges: {
     latitude: number;
     longitude: number;
+    [key: string]: unknown;
   }[],
 ) {
   const apiKey = process.env.OPENROUTESERVICE_API_KEY;
@@ -172,13 +173,58 @@ async function getMatrixDetails(
     return [];
   }
 
-  // User + maximum 10 nearest colleges
-  const selectedColleges = colleges.slice(0, 10);
+  function getStraightLineDistanceKm(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ) {
+    const earthRadiusKm = 6371;
 
-  const locations = [
-    [userLon, userLat],
-    ...selectedColleges.map((college) => [college.longitude, college.latitude]),
-  ];
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+    const latitude1 = (lat1 * Math.PI) / 180;
+    const latitude2 = (lat2 * Math.PI) / 180;
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.sin(dLon / 2) ** 2 *
+        Math.cos(latitude1) *
+        Math.cos(latitude2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return earthRadiusKm * c;
+  }
+
+const collegesWithStraightLineDistance = colleges.map((college) => ({
+  college,
+  straightLineDistanceKm: getStraightLineDistanceKm(
+    userLat,
+    userLon,
+    college.latitude,
+    college.longitude,
+  ),
+}));
+
+collegesWithStraightLineDistance.sort(
+  (a, b) =>
+    a.straightLineDistanceKm - b.straightLineDistanceKm,
+);
+
+const selectedColleges = collegesWithStraightLineDistance
+  .slice(0, 10)
+  .map((item) => item.college);;
+
+
+const locations = [
+  [userLon, userLat],
+  ...selectedColleges.map((college) => [
+    college.longitude,
+    college.latitude,
+  ]),
+];
 
   const response = await fetch(
     "https://api.openrouteservice.org/v2/matrix/driving-car",
@@ -191,7 +237,9 @@ async function getMatrixDetails(
       body: JSON.stringify({
         locations,
         sources: [0],
-        destinations: selectedColleges.map((_, index) => index + 1),
+        destinations: selectedColleges.map(
+          (_, index) => index + 1,
+        ),
         metrics: ["distance", "duration"],
         units: "km",
       }),
@@ -216,13 +264,26 @@ async function getMatrixDetails(
   const distances = data.distances?.[0] ?? [];
   const durations = data.durations?.[0] ?? [];
 
-  return selectedColleges.map((college, index) => ({
+
+const collegesWithRoutes = selectedColleges.map(
+  (college, index) => ({
     ...college,
     distanceKm:
       distances[index] !== undefined
         ? Number(distances[index].toFixed(1))
         : null,
     durationMinutes:
-      durations[index] !== undefined ? Math.round(durations[index] / 60) : null,
-  }));
+      durations[index] !== undefined
+        ? Math.round(durations[index] / 60)
+        : null,
+  }),
+);
+
+collegesWithRoutes.sort(
+  (a, b) =>
+    (a.distanceKm ?? Infinity) -
+    (b.distanceKm ?? Infinity),
+);
+
+return collegesWithRoutes;
 }
