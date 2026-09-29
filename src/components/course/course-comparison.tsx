@@ -24,9 +24,7 @@ type CourseComparisonProps = {
   courses: Class12Course[];
 };
 
-export default function CourseComparison({
-  courses,
-}: CourseComparisonProps) {
+export default function CourseComparison({ courses }: CourseComparisonProps) {
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
 
   const toggleCourse = (courseName: string) => {
@@ -44,10 +42,7 @@ export default function CourseComparison({
   };
 
   const selected = useMemo(
-    () =>
-      courses.filter((course) =>
-        selectedCourses.includes(course.course),
-      ),
+    () => courses.filter((course) => selectedCourses.includes(course.course)),
     [courses, selectedCourses],
   );
 
@@ -57,9 +52,7 @@ export default function CourseComparison({
         <div className="flex items-center gap-3">
           <GraduationCap className="h-6 w-6 text-purple-500" />
           <div>
-            <h2 className="text-lg font-bold">
-              No courses available
-            </h2>
+            <h2 className="text-lg font-bold">No courses available</h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Complete a Class 12 assessment first.
             </p>
@@ -116,9 +109,7 @@ export default function CourseComparison({
                       Recommended Course
                     </p>
 
-                    <h2 className="mt-2 text-lg font-black">
-                      {course.course}
-                    </h2>
+                    <h2 className="mt-2 text-lg font-black">{course.course}</h2>
                   </div>
 
                   <div
@@ -134,9 +125,7 @@ export default function CourseComparison({
 
                 <div className="mt-5 flex items-end justify-between">
                   <div>
-                    <p className="text-xs text-gray-500">
-                      AI Match
-                    </p>
+                    <p className="text-xs text-gray-500">AI Match</p>
 
                     <p className="text-3xl font-black text-purple-500">
                       {course.matchPercentage}%
@@ -158,9 +147,7 @@ export default function CourseComparison({
         <section className="space-y-5">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-black">
-                Course Comparison
-              </h2>
+              <h2 className="text-xl font-black">Course Comparison</h2>
 
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 Compare the selected courses side by side.
@@ -190,17 +177,13 @@ export default function CourseComparison({
 
               {selected.map((course) => (
                 <ComparisonValue key={course.course}>
-                  <h3 className="font-black">
-                    {course.course}
-                  </h3>
+                  <h3 className="font-black">{course.course}</h3>
 
                   <p className="mt-2 text-3xl font-black text-purple-500">
                     {course.matchPercentage}%
                   </p>
 
-                  <p className="text-xs text-gray-500">
-                    AI Match
-                  </p>
+                  <p className="text-xs text-gray-500">AI Match</p>
                 </ComparisonValue>
               ))}
 
@@ -229,9 +212,7 @@ export default function CourseComparison({
                   <div className="space-y-3">
                     {course.jobs.map((job) => (
                       <div key={`${job.role}-${job.salaryINR}`}>
-                        <p className="text-sm font-semibold">
-                          {job.role}
-                        </p>
+                        <p className="text-sm font-semibold">{job.role}</p>
                         <p className="mt-1 text-xs font-medium text-emerald-500">
                           {job.salaryINR}
                         </p>
@@ -303,9 +284,7 @@ export default function CourseComparison({
                         key={college}
                         className="flex items-start gap-2 text-sm"
                       >
-                        <span className="mt-1 text-purple-500">
-                          •
-                        </span>
+                        <span className="mt-1 text-purple-500">•</span>
 
                         <span className="text-gray-600 dark:text-gray-300">
                           {college}
@@ -346,9 +325,7 @@ export default function CourseComparison({
         <section className="rounded-2xl border border-dashed border-purple-500/30 bg-purple-500/5 p-6 text-center">
           <Trophy className="mx-auto h-7 w-7 text-purple-500" />
 
-          <h2 className="mt-3 font-bold">
-            Select at least 2 courses
-          </h2>
+          <h2 className="mt-3 font-bold">Select at least 2 courses</h2>
 
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Choose two or three courses above to start comparing.
@@ -369,11 +346,7 @@ function ComparisonLabel({
   return (
     <div className="border-b border-r border-black/10 bg-gray-50 p-4 dark:border-white/10 dark:bg-white/5">
       <div className="flex items-center gap-2 text-sm font-bold">
-        {icon && (
-          <span className="text-purple-500">
-            {icon}
-          </span>
-        )}
+        {icon && <span className="text-purple-500">{icon}</span>}
 
         {label}
       </div>
@@ -381,11 +354,7 @@ function ComparisonLabel({
   );
 }
 
-function ComparisonValue({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function ComparisonValue({ children }: { children: React.ReactNode }) {
   return (
     <div className="border-b border-black/10 p-5 dark:border-white/10">
       {children}
