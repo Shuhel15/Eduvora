@@ -25,7 +25,7 @@ export default async function classPage() {
         >
           <div className="flex flex-col justify-center">
             <div className="mb-4 flex justify-center">
-              <div className="flex font-semibold items-center gap-2 rounded-full border-2 border-purple-500/50 bg-purple-400/40 px-4 py-2 text-sm dark:text-purple-300 text-purple-500">
+              <div className="flex font-semibold items-center gap-2 rounded-full border-2 border-purple-500/25 bg-purple-500/25 px-4 py-2 text-sm text-purple-500">
                 <GraduationCap size={18} />
                 <p>Personalized for your class</p>
               </div>
