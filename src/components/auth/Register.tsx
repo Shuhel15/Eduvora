@@ -29,7 +29,9 @@ export default function RegisterForm() {
       const data = await result.json();
 
       if (!result.ok) {
-        throw new Error(data.message || "Something went wrong");
+        setLoading(false);
+        toast.error(data.message || "Registration failed. Please try again.");
+        return;
       }
 
       setLoading(false);

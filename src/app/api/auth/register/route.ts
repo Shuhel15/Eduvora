@@ -12,7 +12,8 @@ const registerSchema = z
       .string()
       .trim()
       .min(2, "Name must be at least 2 characters")
-      .max(50, "Name must be less than 50 characters"),
+      .max(50, "Name must be less than 50 characters")
+      .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
 
     email: z
       .string()
@@ -22,7 +23,8 @@ const registerSchema = z
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
-      .max(50, "Password must be less than 50 characters"),
+      .max(50, "Password must be less than 50 characters")
+      .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"),
 
     confirmPassword: z.string(),
   })
@@ -38,10 +40,17 @@ export async function POST(request: Request) {
     const parsed = registerSchema.safeParse(body);
 
     if (!parsed.success) {
+      const message = parsed.error.issues
+        .map((issue) => issue.message)
+        .filter((errorMessage, index, messages) =>
+          messages.indexOf(errorMessage) === index,
+        )
+        .join(". ");
+
       return NextResponse.json(
         {
           success: false,
-          message: "Invalid input",
+          message: message || "Invalid input",
           errors: parsed.error.flatten().fieldErrors,
         },
         { status: 400 }
