@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import type { AssessmentResult } from "@/validations/assessment-result";
 import type { AssessmentResponse } from "@/types/assessment";
+import Loading from "@/app/loading";
 
 export default function ResultContent() {
   const searchParams = useSearchParams();
@@ -92,15 +93,7 @@ export default function ResultContent() {
   }
 
   if (!assessment) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
-
-          <p className="mt-4 text-sm text-gray-500">Loading your result...</p>
-        </div>
-      </main>
-    );
+    return <Loading />;
   }
 
   const result = assessment.aiResult;
