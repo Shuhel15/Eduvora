@@ -13,6 +13,7 @@ import {
   AlertCircle,
   ExternalLink,
   School,
+  ShieldCheck,
 } from "lucide-react";
 
 import { College } from "@/types/nearbycollege";
@@ -103,13 +104,13 @@ export default function NearbyCollegesPage() {
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <section className="mb-10 flex flex-col items-center rounded-xl bg-purple-500/25 border border-purple-500 p-6  text-center shadow-lg shadow-purple-500/10 sm:p-10">
-          <p className="flex w-fit items-center gap-2 border-2 rounded-full  border-purple-500  px-3 py-1.5 text-sm font-semibold text-purple-500 backdrop-blur-sm">
-            <School className="h-4 w-4" />
-            Nearby Colleges & Universities
+          <p className="flex w-fit items-center gap-2 border rounded-full  border-purple-500  px-3 py-1.5 text-sm font-medium  backdrop-blur-sm">
+            <School className="h-4 w-4 text-yellow-500" />
+            College Discovery
           </p>
 
           <h1 className="mt-5 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-            Explore Your College Options
+            Explore Your <span className="text-purple-500">College Options</span>
           </h1>
 
           <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-600 dark:text-gray-300 sm:text-base">
@@ -121,7 +122,7 @@ export default function NearbyCollegesPage() {
             type="button"
             onClick={getNearbyColleges}
             disabled={loading || locationLoading}
-            className="group mt-6 inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-102 hover:opacity-90 dark:bg-white dark:text-black disabled:cursor-not-allowed disabled:opacity-60"
+            className="group mt-6 inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white  transition-all duration-300 hover:scale-102 hover:opacity-90 dark:bg-white dark:text-black disabled:cursor-not-allowed disabled:opacity-60 shadow-xl shadow-purple-500/20 "
           >
             {loading || locationLoading ? (
               <>
@@ -135,6 +136,9 @@ export default function NearbyCollegesPage() {
               </>
             )}
           </button>
+          <p className="flex flex-row justify-center items-center text-center mt-5 text-xs dark:text-white/50 text-black/50 gap-2"><ShieldCheck className="h-3.5 w-3.5"/>
+            Your location is used only to find nearby colleges and is not stored or shared.
+          </p>
         </section>
 
         {/* Error */}
@@ -219,7 +223,7 @@ function CollegeCard({ college }: { college: College }) {
   };
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-black/10 bg-white dark:bg-neutral-900 dark:hover:bg-neutral-850 hover:border-purple-500 p-5 shadow-sm transition-all duration-300 hover:scale-102  hover:shadow-lg dark:border-white/10 ">
+    <article className="group flex h-full flex-col rounded-2xl border border-black/10  hover:border-purple-500 p-5 shadow-sm transition-all duration-300 hover:scale-102  hover:shadow-lg dark:border-white/10 ">
       {/* College Name */}
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 transition-transform duration-300 group-hover:rotate-3">
@@ -314,7 +318,7 @@ function CollegeCard({ college }: { college: College }) {
       <button
         type="button"
         onClick={openInGoogleMaps}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-emerald-500 hover:text-emerald-500 dark:border-white/10"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-emerald-500 hover:text-emerald-500 dark:border-white/10 active:scale-97 ease-in-out bg-black/5 dark:bg-white/5  text-black dark:text-white  shadow-sm hover:shadow-md"
       >
         <Navigation className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
         Get Directions
@@ -324,6 +328,7 @@ function CollegeCard({ college }: { college: College }) {
   );
 }
 
+// Helper Functions
 function formatDuration(minutes: number | null) {
   if (minutes === null) {
     return "N/A";

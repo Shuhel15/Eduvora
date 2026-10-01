@@ -28,10 +28,15 @@ type CollegeResult = {
 
 type CollegeBase = Omit<CollegeResult, "distanceKm" | "durationMinutes">;
 
-const OVERPASS_TIMEOUT_MS = 30_000;
+const OVERPASS_TIMEOUT_MS = 15_000;
 const ROUTING_TIMEOUT_MS = 15_000;
 
-//Getting coordinates from OverpassElement based on its type
+const OVERPASS_SERVERS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
+
+// Getting coordinates from OverpassElement based on its type
 function getCoordinates(element: OverpassElement) {
   if (element.type === "node") {
     return {
@@ -46,17 +51,118 @@ function getCoordinates(element: OverpassElement) {
   };
 }
 
+// Sleep helper for retry
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Fetch Overpass with retry + alternate server
+async function fetchOverpass(query: string) {
+  let lastError: unknown = null;
+
+  for (
+    let serverIndex = 0;
+    serverIndex < OVERPASS_SERVERS.length;
+    serverIndex++
+  ) {
+    const server = OVERPASS_SERVERS[serverIndex];
+
+    // Retry each server up to 2 times
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const controller = new AbortController();
+
+      const timeout = setTimeout(() => {
+        controller.abort();
+      }, OVERPASS_TIMEOUT_MS);
+
+      try {
+        console.log(
+          `Overpass request: server=${serverIndex + 1}/${OVERPASS_SERVERS.length}, attempt=${attempt}/2`,
+        );
+
+        const response = await fetch(server, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "Eduvora/1.0 (career-guidance-platform)",
+            Accept: "application/json",
+          },
+          body: new URLSearchParams({
+            data: query,
+          }).toString(),
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+
+          console.error("Overpass API error:", {
+            server,
+            attempt,
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText,
+          });
+
+          throw new Error(
+            `Overpass failed: ${response.status} ${response.statusText}`,
+          );
+        }
+
+        const data: unknown = await response.json();
+
+        if (
+          !data ||
+          typeof data !== "object" ||
+          !Array.isArray((data as { elements?: unknown }).elements)
+        ) {
+          throw new Error("Invalid Overpass response.");
+        }
+
+        console.log("Overpass request successful.");
+
+        return data as {
+          elements: OverpassElement[];
+        };
+      } catch (error) {
+        lastError = error;
+
+        console.error("Overpass request failed:", {
+          server,
+          attempt,
+          error,
+        });
+
+        // Small delay before retry
+        if (attempt < 2) {
+          await sleep(700);
+        }
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("All Overpass servers failed.");
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
     const lat = Number(searchParams.get("lat"));
     const lon = Number(searchParams.get("lon"));
+
     const requestedRadius = Number(searchParams.get("radius"));
+
     const radius = Number.isFinite(requestedRadius)
       ? Math.min(Math.max(requestedRadius, 1_000), 50_000)
       : 50_000;
 
+    // Validate coordinates
     if (
       !Number.isFinite(lat) ||
       !Number.isFinite(lon) ||
@@ -74,8 +180,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Searching for colleges and universities from giver lat, lon and radius using Overpass API 
-    // and giving the response in JSON format
+    // 1. Search colleges using Overpass
+
     const overpassQuery = `
       [out:json][timeout:25];
 
@@ -87,60 +193,28 @@ export async function GET(request: NextRequest) {
       out center tags;
     `;
 
-
-    const overpassAbortController = new AbortController();
-    const overpassTimeout = setTimeout(
-      () => overpassAbortController.abort(),
-      OVERPASS_TIMEOUT_MS,
-    );
-
-    let response: Response;
+    let data: {
+      elements: OverpassElement[];
+    };
 
     try {
-      response = await fetch("https://overpass-api.de/api/interpreter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "Eduvora/1.0 (career-guidance-platform)",
-          Accept: "application/json",
+      data = await fetchOverpass(overpassQuery);
+    } catch (error) {
+      console.error("All Overpass attempts failed:", error);
+
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "College search service is temporarily unavailable. Please try again in a few seconds.",
         },
-        body: new URLSearchParams({
-          data: overpassQuery,
-        }).toString(),
-        cache: "no-store",
-        signal: overpassAbortController.signal,
-      });
-    } finally {
-      clearTimeout(overpassTimeout);
-    }
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      console.error("Overpass API error:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorText,
-      });
-
-      throw new Error(
-        `Overpass API failed: ${response.status} ${response.statusText}`,
+        { status: 503 },
       );
     }
 
-    const data: unknown = await response.json();
+    //2. Convert Overpass data into college objects
 
-    if (
-      !data ||
-      typeof data !== "object" ||
-      !Array.isArray((data as { elements?: unknown }).elements)
-    ) {
-      throw new Error("Overpass API returned an invalid response.");
-    }
-
-    const colleges: (CollegeBase | null)[] = (
-      data as { elements: OverpassElement[] }
-    ).elements
+    const colleges: (CollegeBase | null)[] = data.elements
       .map<CollegeBase | null>((element) => {
         const coordinates = getCoordinates(element);
 
@@ -152,10 +226,14 @@ export async function GET(request: NextRequest) {
 
         return {
           id: `${element.type}-${element.id}`,
+
           name: tags.name ?? "Unnamed College",
+
           type: tags.amenity === "university" ? "University" : "College",
+
           latitude: coordinates.lat,
           longitude: coordinates.lon,
+
           address:
             tags["addr:full"] ||
             [
@@ -167,17 +245,30 @@ export async function GET(request: NextRequest) {
               .filter(Boolean)
               .join(", ") ||
             null,
+
           phone: tags.phone || tags["contact:phone"] || null,
+
           email: tags.email || tags["contact:email"] || null,
+
           website: tags.website || tags["contact:website"] || null,
         };
       })
       .filter(Boolean);
 
-    //Getting distance and time from user location to each college
     const validColleges = colleges.filter(
-      (college): college is NonNullable<typeof college> => college !== null,
+      (college): college is CollegeBase => college !== null,
     );
+
+    //3. No colleges found
+
+    if (validColleges.length === 0) {
+      return NextResponse.json({
+        success: true,
+        colleges: [],
+      });
+    }
+
+    // 4. Get distance + travel time
 
     const collegesWithRoutes = await getMatrixDetails(lat, lon, validColleges);
 
@@ -185,12 +276,12 @@ export async function GET(request: NextRequest) {
       (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity),
     );
 
+    //  5. Final response
+
     return NextResponse.json({
       success: true,
       colleges: sortedColleges,
     });
-
-
   } catch (error) {
     console.error("Nearby colleges API error:", error);
 
@@ -204,17 +295,17 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Helper function for distance and time.
-
+// Routing and distance calculation using OpenRouteService
 async function getMatrixDetails(
   userLat: number,
   userLon: number,
   colleges: CollegeBase[],
-) {
+): Promise<CollegeResult[]> {
   if (colleges.length === 0) {
     return [];
   }
 
+//  Straight-line distance
   function getStraightLineDistanceKm(
     lat1: number,
     lon1: number,
@@ -224,24 +315,26 @@ async function getMatrixDetails(
     const earthRadiusKm = 6371;
 
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
+
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
 
     const latitude1 = (lat1 * Math.PI) / 180;
+
     const latitude2 = (lat2 * Math.PI) / 180;
 
     const a =
       Math.sin(dLat / 2) ** 2 +
-      Math.sin(dLon / 2) ** 2 *
-        Math.cos(latitude1) *
-        Math.cos(latitude2);
+      Math.sin(dLon / 2) ** 2 * Math.cos(latitude1) * Math.cos(latitude2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return earthRadiusKm * c;
   }
 
+//  Select only 10 closest colleges before ORS
   const collegesWithStraightLineDistance = colleges.map((college) => ({
     college,
+
     straightLineDistanceKm: getStraightLineDistanceKm(
       userLat,
       userLon,
@@ -258,8 +351,12 @@ async function getMatrixDetails(
     .slice(0, 10)
     .map((item) => item.college);
 
+
+  //  If OpenRouteService fails, we still return colleges.
+  // Distance will be straight-line distance.
   const fallbackResults: CollegeResult[] = selectedColleges.map((college) => ({
     ...college,
+
     distanceKm: Number(
       getStraightLineDistanceKm(
         userLat,
@@ -268,28 +365,33 @@ async function getMatrixDetails(
         college.longitude,
       ).toFixed(1),
     ),
+
     durationMinutes: null,
   }));
 
+//  OpenRouteService API key
   const apiKey = process.env.OPENROUTESERVICE_API_KEY;
 
   if (!apiKey) {
     console.warn(
-      "OPENROUTESERVICE_API_KEY is not configured; using straight-line distances.",
+      "OPENROUTESERVICE_API_KEY is missing. Using straight-line distances.",
     );
+
     return fallbackResults;
   }
 
+//  ORS Matrix request
   const locations = [
     [userLon, userLat],
+
     ...selectedColleges.map((college) => [college.longitude, college.latitude]),
   ];
 
   const routingAbortController = new AbortController();
-  const routingTimeout = setTimeout(
-    () => routingAbortController.abort(),
-    ROUTING_TIMEOUT_MS,
-  );
+
+  const routingTimeout = setTimeout(() => {
+    routingAbortController.abort();
+  }, ROUTING_TIMEOUT_MS);
 
   let response: Response;
 
@@ -298,28 +400,38 @@ async function getMatrixDetails(
       "https://api.openrouteservice.org/v2/matrix/driving-car",
       {
         method: "POST",
+
         headers: {
           Authorization: apiKey,
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           locations,
+
           sources: [0],
+
           destinations: selectedColleges.map((_, index) => index + 1),
+
           metrics: ["distance", "duration"],
+
           units: "km",
         }),
+
         cache: "no-store",
+
         signal: routingAbortController.signal,
       },
     );
   } catch (error) {
     console.error("OpenRouteService request failed:", error);
+
     return fallbackResults;
   } finally {
     clearTimeout(routingTimeout);
   }
 
+//  ORS failed
   if (!response.ok) {
     const errorText = await response.text();
 
@@ -332,12 +444,14 @@ async function getMatrixDetails(
     return fallbackResults;
   }
 
+// Parse ORS response
   let data: unknown;
 
   try {
     data = await response.json();
   } catch (error) {
     console.error("OpenRouteService returned invalid JSON:", error);
+
     return fallbackResults;
   }
 
@@ -346,25 +460,32 @@ async function getMatrixDetails(
   }
 
   const distances = (data as { distances?: unknown }).distances;
+
   const durations = (data as { durations?: unknown }).durations;
 
+//  Invalid ORS response
   if (
     !Array.isArray(distances) ||
     !Array.isArray(distances[0]) ||
     !Array.isArray(durations) ||
     !Array.isArray(durations[0])
   ) {
+    console.warn("Invalid ORS matrix response. Using fallback distances.");
+
     return fallbackResults;
   }
 
+//  Merge ORS data with colleges
   const collegesWithRoutes: CollegeResult[] = selectedColleges.map(
     (college, index) => ({
       ...college,
+
       distanceKm:
         typeof distances[0][index] === "number" &&
         Number.isFinite(distances[0][index])
           ? Number(distances[0][index].toFixed(1))
           : fallbackResults[index].distanceKm,
+
       durationMinutes:
         typeof durations[0][index] === "number" &&
         Number.isFinite(durations[0][index])
@@ -373,6 +494,7 @@ async function getMatrixDetails(
     }),
   );
 
+//  Final sorting
   return collegesWithRoutes.sort(
     (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity),
   );
