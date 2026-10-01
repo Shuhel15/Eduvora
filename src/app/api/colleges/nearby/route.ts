@@ -12,6 +12,25 @@ type OverpassElement = {
   tags?: Record<string, string>;
 };
 
+type CollegeResult = {
+  id: string;
+  name: string;
+  type: "College" | "University";
+  latitude: number;
+  longitude: number;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  distanceKm: number | null;
+  durationMinutes: number | null;
+};
+
+type CollegeBase = Omit<CollegeResult, "distanceKm" | "durationMinutes">;
+
+const OVERPASS_TIMEOUT_MS = 30_000;
+const ROUTING_TIMEOUT_MS = 15_000;
+
 //Getting coordinates from OverpassElement based on its type
 function getCoordinates(element: OverpassElement) {
   if (element.type === "node") {
@@ -33,9 +52,19 @@ export async function GET(request: NextRequest) {
 
     const lat = Number(searchParams.get("lat"));
     const lon = Number(searchParams.get("lon"));
-    const radius = Number(searchParams.get("radius")) || 50000;
+    const requestedRadius = Number(searchParams.get("radius"));
+    const radius = Number.isFinite(requestedRadius)
+      ? Math.min(Math.max(requestedRadius, 1_000), 50_000)
+      : 50_000;
 
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+    if (
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lon) ||
+      lat < -90 ||
+      lat > 90 ||
+      lon < -180 ||
+      lon > 180
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -59,18 +88,31 @@ export async function GET(request: NextRequest) {
     `;
 
 
-    const response = await fetch("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Eduvora/1.0 (career-guidance-platform)",
-        Accept: "application/json",
-      },
-      body: new URLSearchParams({
-        data: overpassQuery,
-      }).toString(),
-      cache: "no-store",
-    });
+    const overpassAbortController = new AbortController();
+    const overpassTimeout = setTimeout(
+      () => overpassAbortController.abort(),
+      OVERPASS_TIMEOUT_MS,
+    );
+
+    let response: Response;
+
+    try {
+      response = await fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "Eduvora/1.0 (career-guidance-platform)",
+          Accept: "application/json",
+        },
+        body: new URLSearchParams({
+          data: overpassQuery,
+        }).toString(),
+        cache: "no-store",
+        signal: overpassAbortController.signal,
+      });
+    } finally {
+      clearTimeout(overpassTimeout);
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -86,10 +128,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await response.json();
+    const data: unknown = await response.json();
 
-    const colleges = (data.elements as OverpassElement[])
-      .map((element) => {
+    if (
+      !data ||
+      typeof data !== "object" ||
+      !Array.isArray((data as { elements?: unknown }).elements)
+    ) {
+      throw new Error("Overpass API returned an invalid response.");
+    }
+
+    const colleges: (CollegeBase | null)[] = (
+      data as { elements: OverpassElement[] }
+    ).elements
+      .map<CollegeBase | null>((element) => {
         const coordinates = getCoordinates(element);
 
         if (coordinates.lat === undefined || coordinates.lon === undefined) {
@@ -157,18 +209,8 @@ export async function GET(request: NextRequest) {
 async function getMatrixDetails(
   userLat: number,
   userLon: number,
-  colleges: {
-    latitude: number;
-    longitude: number;
-    [key: string]: unknown;
-  }[],
+  colleges: CollegeBase[],
 ) {
-  const apiKey = process.env.OPENROUTESERVICE_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("OpenRouteService API key is missing.");
-  }
-
   if (colleges.length === 0) {
     return [];
   }
@@ -198,54 +240,85 @@ async function getMatrixDetails(
     return earthRadiusKm * c;
   }
 
-const collegesWithStraightLineDistance = colleges.map((college) => ({
-  college,
-  straightLineDistanceKm: getStraightLineDistanceKm(
-    userLat,
-    userLon,
-    college.latitude,
-    college.longitude,
-  ),
-}));
+  const collegesWithStraightLineDistance = colleges.map((college) => ({
+    college,
+    straightLineDistanceKm: getStraightLineDistanceKm(
+      userLat,
+      userLon,
+      college.latitude,
+      college.longitude,
+    ),
+  }));
 
-collegesWithStraightLineDistance.sort(
-  (a, b) =>
-    a.straightLineDistanceKm - b.straightLineDistanceKm,
-);
-
-const selectedColleges = collegesWithStraightLineDistance
-  .slice(0, 10)
-  .map((item) => item.college);;
-
-
-const locations = [
-  [userLon, userLat],
-  ...selectedColleges.map((college) => [
-    college.longitude,
-    college.latitude,
-  ]),
-];
-
-  const response = await fetch(
-    "https://api.openrouteservice.org/v2/matrix/driving-car",
-    {
-      method: "POST",
-      headers: {
-        Authorization: apiKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        locations,
-        sources: [0],
-        destinations: selectedColleges.map(
-          (_, index) => index + 1,
-        ),
-        metrics: ["distance", "duration"],
-        units: "km",
-      }),
-      cache: "no-store",
-    },
+  collegesWithStraightLineDistance.sort(
+    (a, b) => a.straightLineDistanceKm - b.straightLineDistanceKm,
   );
+
+  const selectedColleges = collegesWithStraightLineDistance
+    .slice(0, 10)
+    .map((item) => item.college);
+
+  const fallbackResults: CollegeResult[] = selectedColleges.map((college) => ({
+    ...college,
+    distanceKm: Number(
+      getStraightLineDistanceKm(
+        userLat,
+        userLon,
+        college.latitude,
+        college.longitude,
+      ).toFixed(1),
+    ),
+    durationMinutes: null,
+  }));
+
+  const apiKey = process.env.OPENROUTESERVICE_API_KEY;
+
+  if (!apiKey) {
+    console.warn(
+      "OPENROUTESERVICE_API_KEY is not configured; using straight-line distances.",
+    );
+    return fallbackResults;
+  }
+
+  const locations = [
+    [userLon, userLat],
+    ...selectedColleges.map((college) => [college.longitude, college.latitude]),
+  ];
+
+  const routingAbortController = new AbortController();
+  const routingTimeout = setTimeout(
+    () => routingAbortController.abort(),
+    ROUTING_TIMEOUT_MS,
+  );
+
+  let response: Response;
+
+  try {
+    response = await fetch(
+      "https://api.openrouteservice.org/v2/matrix/driving-car",
+      {
+        method: "POST",
+        headers: {
+          Authorization: apiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          locations,
+          sources: [0],
+          destinations: selectedColleges.map((_, index) => index + 1),
+          metrics: ["distance", "duration"],
+          units: "km",
+        }),
+        cache: "no-store",
+        signal: routingAbortController.signal,
+      },
+    );
+  } catch (error) {
+    console.error("OpenRouteService request failed:", error);
+    return fallbackResults;
+  } finally {
+    clearTimeout(routingTimeout);
+  }
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -256,34 +329,51 @@ const locations = [
       body: errorText,
     });
 
-    throw new Error("Failed to calculate college distances.");
+    return fallbackResults;
   }
 
-  const data = await response.json();
+  let data: unknown;
 
-  const distances = data.distances?.[0] ?? [];
-  const durations = data.durations?.[0] ?? [];
+  try {
+    data = await response.json();
+  } catch (error) {
+    console.error("OpenRouteService returned invalid JSON:", error);
+    return fallbackResults;
+  }
 
+  if (!data || typeof data !== "object") {
+    return fallbackResults;
+  }
 
-const collegesWithRoutes = selectedColleges.map(
-  (college, index) => ({
-    ...college,
-    distanceKm:
-      distances[index] !== undefined
-        ? Number(distances[index].toFixed(1))
-        : null,
-    durationMinutes:
-      durations[index] !== undefined
-        ? Math.round(durations[index] / 60)
-        : null,
-  }),
-);
+  const distances = (data as { distances?: unknown }).distances;
+  const durations = (data as { durations?: unknown }).durations;
 
-collegesWithRoutes.sort(
-  (a, b) =>
-    (a.distanceKm ?? Infinity) -
-    (b.distanceKm ?? Infinity),
-);
+  if (
+    !Array.isArray(distances) ||
+    !Array.isArray(distances[0]) ||
+    !Array.isArray(durations) ||
+    !Array.isArray(durations[0])
+  ) {
+    return fallbackResults;
+  }
 
-return collegesWithRoutes;
+  const collegesWithRoutes: CollegeResult[] = selectedColleges.map(
+    (college, index) => ({
+      ...college,
+      distanceKm:
+        typeof distances[0][index] === "number" &&
+        Number.isFinite(distances[0][index])
+          ? Number(distances[0][index].toFixed(1))
+          : fallbackResults[index].distanceKm,
+      durationMinutes:
+        typeof durations[0][index] === "number" &&
+        Number.isFinite(durations[0][index])
+          ? Math.round(durations[0][index] / 60)
+          : null,
+    }),
+  );
+
+  return collegesWithRoutes.sort(
+    (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity),
+  );
 }

@@ -13,7 +13,7 @@ export default function AuthButton() {
       <button
         type="button"
         onClick={() => signOut({ callbackUrl: "/login" })}
-        className="flex items-center gap-1 font-semibold text-white bg-linear-to-br from-purple-600 to-purple-500 py-1 px-2 rounded-lg hover:transition-transform hover:-translate-y-0.5  duration-200 active:scale-100"
+        className="flex items-center gap-1 hover:shadow-lg shadow-gray-300 dark:shadow-neutral-700 text-white bg-black dark:bg-white dark:text-black py-1 px-2 rounded-lg hover:transition-transform hover:-translate-y-0.5  duration-200 active:scale-100"
       >
         Logout
         <LogOut size={18} />
@@ -25,7 +25,7 @@ export default function AuthButton() {
     <button
       type="button"
       onClick={() => signIn(undefined, { callbackUrl: "/" })}
-      className="flex items-center gap-1 font-semibold text-white bg-linear-to-br from-purple-600 to-purple-500 py-1 px-2 rounded-lg hover:transition-transform hover:-translate-y-0.5  duration-200 active:scale-100"
+      className="flex items-center gap-1 hover:shadow-lg shadow-gray-300 dark:shadow-neutral-700 text-white bg-black dark:bg-white dark:text-black py-1 px-2 rounded-lg hover:transition-transform hover:-translate-y-0.5  duration-200 active:scale-100"
     >
       Login <LogIn size={18} />
     </button>

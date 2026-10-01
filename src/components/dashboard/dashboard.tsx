@@ -100,21 +100,21 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
   return (
     <main className="mx-auto w-full max-w-7xl space-y-8 py-8 sm:py-10">
       {/* Welcome */}
-      <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center bg-linear-to-br from-purple-600 to-purple-500 p-4 rounded-xl">
+      <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center border border-purple-500 p-4 rounded-xl">
         <div>
-          <div className="mb-2 flex items-center gap-2">
+          <div className="mb-2 flex items-center gap-2 bg-emerald-500/40 border border-emerald-500 w-fit rounded-xl px-3 py-1">
             <Sparkles className="h-5 w-5 text-yellow-500 fill-yellow-500" />
 
-            <span className="text-sm font-semibold text-emerald-400">
+            <span className="text-sm font-semibold text-emerald-500">
               AI Career Guidance
             </span>
           </div>
 
-          <h1 className="text-3xl text-white font-black tracking-tight sm:text-4xl">
+          <h1 className="text-3xl text-foreground font-black tracking-tight sm:text-4xl">
             Welcome back, {userName}
           </h1>
 
-          <p className="mt-2 text-sm text-gray-300">
+          <p className="mt-2 text-sm text-gray-400 ">
             Continue exploring your career journey with Eduvora.
           </p>
         </div>
@@ -177,9 +177,9 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
           <button
             type="button"
             onClick={() => router.push("/courses/compare")}
-            className="flex flex-row items-center gap-2 w-fit px-2 py-1 border rounded-xl border-emerald-500 text-emerald-500 bg-emerald-500/25 hover:scale-103 duration-300 ease-in-out active:scale-100"
+            className="group flex flex-row items-center gap-2 w-fit px-2 py-1 border rounded-xl border-emerald-500 text-emerald-500 bg-emerald-500/25 hover:scale-103 duration-300 ease-in-out active:scale-100"
           >
-            <Scale className="h-5 w-5 text-yellow-500" />Compare Courses
+            <Scale className="h-5 w-5 text-yellow-500 transition-transform group-hover:-rotate-18 duration-300" />Compare Courses
           </button>
         </div>
 
@@ -209,7 +209,7 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
               return (
                 <article
                   key={assessment.id}
-                  className="group rounded-2xl border border-black/10 bg-white p-5 transition hover:border-purple-500/30 hover:shadow-lg dark:border-white/10 dark:bg-white/5 sm:p-6 hover:scale-102 duration-300 ease-in-out"
+                  className="group rounded-2xl border border-black/10  p-5 transition hover:border-purple-500 hover:bg-purple-500/25 hover:shadow-lg dark:border-white/10  sm:p-6 hover:scale-102 duration-300 ease-in-out"
                 >
                   <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                     {/* Left */}
@@ -293,9 +293,9 @@ function StatCard({
   description: string;
 }) {
   return (
-    <article className="rounded-2xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-white/5 hover:scale-103 duration-300 ease-in-out ">
+    <article className="rounded-2xl border border-black/10  p-5 dark:border-white/10 hover:bg-pink-500/20 hover:border-pink-500 hover:scale-103 duration-300 ease-in-out ">
       <div className="flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl dark:bg-neutral-500/25 bg-neutral-100 text-purple-500">
           {icon}
         </div>
 

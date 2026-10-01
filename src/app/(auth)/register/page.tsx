@@ -3,7 +3,7 @@ import RegisterForm from "@/components/auth/Register";
 import { Container } from "@/components/container";
 
 export const metadata: Metadata = {
-  title: "Register | Eduvora",
+  title: "Register",
   description: "Create a new Eduvora account.",
   robots: {
     index: false,

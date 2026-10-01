@@ -15,7 +15,6 @@ import {
   School,
 } from "lucide-react";
 
-
 import { College } from "@/types/nearbycollege";
 
 export default function NearbyCollegesPage() {
@@ -52,12 +51,10 @@ export default function NearbyCollegesPage() {
           const data = await response.json();
 
           if (!response.ok || !data.success) {
-            throw new Error(
-              data.error || "Failed to fetch nearby colleges.",
-            );
+            throw new Error(data.error || "Failed to fetch nearby colleges.");
           }
 
-          setColleges(data.colleges ?? []);
+          setColleges(Array.isArray(data.colleges) ? data.colleges : []);
         } catch (err) {
           console.error(err);
 
@@ -177,9 +174,7 @@ export default function NearbyCollegesPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <School className="h-5 w-5 text-purple-500" />
-                  <h2 className="text-xl font-bold">
-                    Colleges Near You
-                  </h2>
+                  <h2 className="text-xl font-bold">Colleges Near You</h2>
                 </div>
 
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -199,7 +194,7 @@ export default function NearbyCollegesPage() {
         {/* Empty State */}
         {!loading && !error && colleges.length === 0 && (
           <div className="mx-auto max-w-xl rounded-2xl border border-black/10 p-8 text-center dark:border-white/10">
-            <MapPin className="mx-auto h-10 w-10 text-purple-500" />
+            <MapPin className="mx-auto h-10 w-10 text-purple-500 animate-bounce" />
 
             <h2 className="mt-4 text-lg font-semibold">
               Find colleges around you
@@ -224,7 +219,7 @@ function CollegeCard({ college }: { college: College }) {
   };
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-black/10 bg-white p-5 shadow-sm transition-all duration-300 hover:scale-102 hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-lg dark:border-white/10 dark:bg-white/5">
+    <article className="group flex h-full flex-col rounded-2xl border border-black/10 bg-white dark:bg-neutral-900 dark:hover:bg-neutral-850 hover:border-purple-500 p-5 shadow-sm transition-all duration-300 hover:scale-102  hover:shadow-lg dark:border-white/10 ">
       {/* College Name */}
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 transition-transform duration-300 group-hover:rotate-3">
@@ -232,7 +227,7 @@ function CollegeCard({ college }: { college: College }) {
         </div>
 
         <div className="min-w-0">
-          <h3 className="line-clamp-2 font-bold leading-6 transition-colors group-hover:text-purple-500">
+          <h3 className="line-clamp-2 font-bold leading-6 transition-colors ">
             {college.name}
           </h3>
 
@@ -251,9 +246,7 @@ function CollegeCard({ college }: { college: College }) {
           </div>
 
           <p className="mt-1 text-lg font-semibold">
-            {college.distanceKm !== null
-              ? `${college.distanceKm} km`
-              : "N/A"}
+            {college.distanceKm !== null ? `${college.distanceKm} km` : "N/A"}
           </p>
         </div>
 
@@ -351,10 +344,7 @@ function formatDuration(minutes: number | null) {
 }
 
 function normalizeWebsite(website: string) {
-  if (
-    website.startsWith("http://") ||
-    website.startsWith("https://")
-  ) {
+  if (website.startsWith("http://") || website.startsWith("https://")) {
     return website;
   }
 

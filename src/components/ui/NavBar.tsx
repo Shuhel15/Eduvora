@@ -62,6 +62,16 @@ export default function Navbar() {
                 Features
               </Link>
             </li>
+
+                            <li>
+                  <Link
+                    href="/dashboard"
+                    onClick={closeMenu}
+                className="text-md font-semibold text-black/70 transition-colors hover:text-black hover:bg-black/10 dark:hover:bg-white/10 p-2 rounded-md dark:text-white/70 dark:hover:text-white"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
           </ul>
 
           <div className="hidden items-center gap-3 md:flex">
@@ -125,6 +135,15 @@ export default function Navbar() {
                     className="block rounded-lg px-4 py-3 text-sm font-semibold text-black/80 transition-colors hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
                   >
                     Features
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard"
+                    onClick={closeMenu}
+                    className="block rounded-lg px-4 py-3 text-sm font-semibold text-black/80 transition-colors hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
+                  >
+                    Dashboard
                   </Link>
                 </li>
 
