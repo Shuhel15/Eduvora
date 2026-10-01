@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import NavBar from "@/components/ui/NavBar";
 import FloatingBackground from "@/components/ui/FloatingBackground";
+import Footer from "@/components/ui/Footer";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -90,6 +91,7 @@ export default function RootLayout({
             <div className="relative z-10">
               <NavBar />
               {children}
+              <Footer/>
             </div>
           </div>
         </Providers>

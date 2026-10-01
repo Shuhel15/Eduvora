@@ -2,13 +2,13 @@
 
 import {
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
   CalendarDays,
   GraduationCap,
   History,
   Scale,
   Sparkles,
-  Target,
   Trophy,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -130,7 +130,7 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
       </section>
 
       {/* Stats */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <StatCard
           icon={<History className="h-5 w-5 text-pink-400" />}
           title="Total Assessments"
@@ -162,24 +162,28 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
 
       {/* Assessment History */}
       <section>
-        <div className="mb-5 flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-purple-500 animate-pulse " />
+        <div className="mb-5 flex w-full items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="group flex items-center gap-2">
+              <History className="h-5 w-5 shrink-0 text-purple-500 transition-transform duration-300 group-hover:-rotate-45" />
 
-              <h2 className="text-xl font-bold">Assessment History</h2>
+              <h2 className="truncate text-lg font-bold sm:text-xl">
+                Quiz History
+              </h2>
             </div>
 
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 truncate text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
               Your completed career assessments
             </p>
           </div>
+
           <button
             type="button"
             onClick={() => router.push("/courses/compare")}
-            className="group flex flex-row items-center gap-2 w-fit px-2 py-1 border rounded-xl border-emerald-500 text-emerald-500 bg-emerald-500/25 hover:scale-103 duration-300 ease-in-out active:scale-100"
+            className="group flex shrink-0 items-center gap-1.5 rounded-xl border border-emerald-500 bg-emerald-500/25 px-2 py-1 text-xs text-emerald-500 transition duration-300 ease-in-out hover:scale-103 active:scale-100 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
           >
-            <Scale className="h-5 w-5 text-yellow-500 transition-transform group-hover:-rotate-18 duration-300" />Compare Courses
+            <Scale className="h-4 w-4 shrink-0 text-yellow-500 transition-transform duration-300 group-hover:-rotate-18 sm:h-5 sm:w-5" />
+            Compare Courses
           </button>
         </div>
 
@@ -211,7 +215,7 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
                   key={assessment.id}
                   className="group rounded-2xl border border-black/10  p-5 transition hover:border-purple-500 hover:bg-purple-500/25 hover:shadow-lg dark:border-white/10  sm:p-6 hover:scale-102 duration-300 ease-in-out"
                 >
-                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col-2 flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                     {/* Left */}
                     <div className="flex items-start gap-4">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10">
@@ -299,7 +303,9 @@ function StatCard({
           {icon}
         </div>
 
-        <span className="text-xs font-medium text-gray-400">Eduvora</span>
+        <span className="text-xs font-medium text-gray-400 flex items-center gap-1">
+          Eduvora <ArrowUpRight className="h-4 w-4" />
+        </span>
       </div>
 
       <p className="mt-5 text-3xl font-black">{value}</p>
