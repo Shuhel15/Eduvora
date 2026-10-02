@@ -23,7 +23,7 @@ export default async function ResultPage() {
 
   return (
     <Container>
-      <main className="min-h-auto items-center flex flex-col justify-center gap-10 py-10">
+      <main className="w-full py-6 sm:py-10">
         <ResultContent />
       </main>
     </Container>

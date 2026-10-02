@@ -142,7 +142,7 @@ function handleContinue() {
           Enter Your Marks
         </h1>
 
-        <p className="mt-3 font-semibold text-sm text-gray-600 dark:text-gray-400 sm:text-base">
+        <p className="mt-3 text-sm text-black/50 dark:text-white/50 sm:text-base">
           Enter your subject-wise marks out of 100. You can also add extra subjects if
           needed.
         </p>

@@ -20,7 +20,7 @@ export default async function marksPage() {
       <main>
         <section
           area-labelledby="marks-heading"
-          className="flex min-h-screen flex-col items-center justify-center mt-5"
+          className="flex min-h-screen flex-col items-center justify-center mt-20"
         >
           <div className="flex flex-col justify-center ">
             <header className="text-center">
@@ -28,9 +28,9 @@ export default async function marksPage() {
                 id="login-heading"
                 className="text-4xl sm:text-4xl md:text-5xl font-black tracking-tight "
               >
-                Enter Marks for more accurate career guidance
+                <span className="text-purple-500">Enter Marks</span> for more accurate <span className="text-emerald-500">career guidance</span>
               </h1>
-              <p className="text-zinc-500/80 font-semibold py-2">
+              <p className="text-black/50 dark:text-white/50 py-4">
                 By entering marks, you can receive personalized career guidance
                 and recommendations based on your academic performance.
               </p>

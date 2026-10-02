@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -12,9 +13,12 @@ import {
   GraduationCap,
   Lightbulb,
   Map,
+  MapPin,
+  RefreshCcw,
   School,
   Sparkles,
   Star,
+  Stars,
   Target,
   Trophy,
 } from "lucide-react";
@@ -113,15 +117,13 @@ export default function ResultContent() {
   }
 
   return (
-    <main className="min-h-screen py-12">
-      <div className="mx-auto w-full max-w-6xl px-4">
-        {result.classLevel === "10" ? (
-          <Class10Result result={result} />
-        ) : (
-          <Class12Result result={result} />
-        )}
-      </div>
-    </main>
+    <div className="w-full">
+      {result.classLevel === "10" ? (
+        <Class10Result result={result} />
+      ) : (
+        <Class12Result result={result} />
+      )}
+    </div>
   );
 }
 
@@ -143,7 +145,7 @@ function Class10Result({
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-8">
+    <div className="w-full space-y-6 sm:space-y-8">
       {/* Recommended Stream */}
       <article className="overflow-hidden rounded-2xl border-2 border-pink-500/30 bg-pink-500/10 hover:scale-102 duration-300 ease-in-out">
         {/* Stream Header */}
@@ -342,177 +344,270 @@ export function Class12Result({
 }: {
   result: Extract<AssessmentResult, { classLevel: "12" }>;
 }) {
+  const router = useRouter();
   const [selectedCourse, setSelectedCourse] = useState<
     (typeof result.recommendedCourses)[number] | null
-  >(null);
+  >(result.recommendedCourses[0] || null);
+
+  type Class12Tab = "jobs" | "subjects" | "roadmap" | "colleges" | "exams";
+  const [activeTab, setActiveTab] = useState<Class12Tab>("jobs");
 
   // COURSE DETAIL VIEW
 
   if (selectedCourse) {
+    const tabs: { id: Class12Tab; label: string }[] = [
+      { id: "jobs", label: "Jobs & Salary" },
+      { id: "subjects", label: "Subjects" },
+      { id: "roadmap", label: "Roadmap" },
+      { id: "colleges", label: "Top Colleges" },
+      { id: "exams", label: "Entrance Exams" },
+    ];
+
     return (
-      <div className="mx-auto w-full max-w-5xl space-y-7">
-        {/* Back */}
-        <button
-          type="button"
-          onClick={() => setSelectedCourse(null)}
-          className="group inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-5 py-2.5 text-sm font-semibold transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
-        >
-          <ArrowLeft className="group-hover:transition-transform group-hover:-translate-x-1 h-4 w-4 duration-300" />
-          Back
-        </button>
-
-        {/* Course Header */}
-        <section className="rounded-3xl border border-emerald-500 bg-emerald-500/25 p-6 sm:p-8 hover:scale-102 duration-300 ease-in-out">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start ">
-            <div>
-              {/* Category */}
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-purple-500 bg-purple-500/25 px-3 py-1 text-xs font-semibold text-purple-500 ">
-                <GraduationCap className="h-3.5 w-3.5" />
-                Recommended Course
-              </div>
-
-              <h2 className="text-2xl font-black  sm:text-4xl">
-                {selectedCourse.course}
-              </h2>
-
-              <div className="mt-3 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <Clock3 className="h-4 w-4" />
-                Degree / Course
-              </div>
-            </div>
-
-            {/* Match */}
-            <div className="shrink-0 sm:text-right flex flex-col text-center items-center">
-              <p className="bg-linear-to-br from-blue-500 to-purple-400 bg-clip-text text-4xl font-black text-transparent sm:text-5xl">
-                {selectedCourse.matchPercentage}%
-              </p>
-
-              <p className="text-xs font-semibold text-gray-500">AI Match</p>
-            </div>
-          </div>
-
-          {/* About */}
-          <div className="mt-6 rounded-2xl bg-white p-5 dark:bg-white/10">
-            <div className="mb-2 flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-purple-400" />
-
-              <h3 className="text-sm font-bold">About this degree</h3>
-            </div>
-
-            <p className="text-sm leading-7 text-gray-600 dark:text-gray-300">
-              {selectedCourse.aboutDegree}
-            </p>
-          </div>
-        </section>
-
-        {/* Jobs & Salary */}
-        <ResultCard
-          icon={<BriefcaseBusiness className="h-4 w-4 text-emerald-500" />}
-          title="Jobs & Salary"
-          className="hover:scale-102 duration-300 ease-in-out"
-        >
-          <div className="grid gap-3 sm:grid-cols-2">
-            {selectedCourse.jobs.map((job, index) => (
-              <div
-                key={`${job.role}-${index}`}
-                className="rounded-xl border border-black/10 bg-black/2 p-4 dark:border-white/10 dark:bg-white/2"
-              >
-                <p className="font-semibold">{job.role}</p>
-
-                <p className="mt-1 text-sm font-medium text-emerald-500">
-                  {job.salaryINR}
-                </p>
-              </div>
-            ))}
-          </div>
-        </ResultCard>
-
-        {/* Subjects + Entrance Exams */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <ResultCard
-            icon={<BookOpen className="h-4 w-4 text-yellow-500 " />}
-            title="Subjects"
-            className="border-yellow-500! bg-yellow-500/25! hover:scale-102 duration-300 ease-in-out"
+      <div className="w-full space-y-6">
+        {/* Navigation & Action Bar */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button"
+            onClick={() => setSelectedCourse(null)}
+            className="group w-fit inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-semibold transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
           >
-            <div className="flex flex-wrap gap-2">
-              {selectedCourse.subjects.map((subject, index) => (
-                <span
-                  key={`${subject}-${index}`}
-                  className="rounded-full border border-yellow-500 bg-yellow-500/25 px-3 py-1.5 text-xs font-medium text-yellow-500"
-                >
-                  {subject}
-                </span>
-              ))}
-            </div>
-          </ResultCard>
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1 duration-300" />
+            Back to courses
+          </button>
 
-          <ResultCard
-            icon={<Target className="h-4 w-4" />}
-            title="Entrance Exams"
-            className="hover:scale-102 duration-300 ease-in-out"
-          >
-            <ul className="space-y-3">
-              {selectedCourse.entranceExams.map((exam, index) => (
-                <li
-                  key={`${exam}-${index}`}
-                  className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300"
-                >
-                  <span className="mt-0.5 text-purple-400">✓</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push("/assessment/class")}
+              className="group flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-xs sm:text-sm font-semibold transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+            >
+              <RefreshCcw className="h-4 w-4 transition-transform group-hover:-rotate-180 duration-300" />
+              Retake Quiz
+            </button>
 
-                  <span>{exam}</span>
-                </li>
-              ))}
-            </ul>
-          </ResultCard>
+            <button
+              onClick={() => router.push("/colleges/nearby")}
+              className="group flex items-center gap-2 rounded-full border border-blue-500/40 bg-blue-500/20 px-4 py-2 text-xs sm:text-sm font-semibold text-blue-500 dark:text-blue-400 transition hover:bg-blue-500/30"
+            >
+              <MapPin className="h-4 w-4 transition-transform group-hover:-rotate-40 duration-300" />
+              Find Colleges
+            </button>
+          </div>
         </div>
 
-        {/* Roadmap */}
-        <ResultCard
-          icon={<Map className="h-4 w-4" />}
-          title="Career Roadmap"
-          className="border-purple-500! bg-purple-500/25! hover:scale-102 duration-300 ease-in-out"
-        >
-          <ol className="space-y-4">
-            {selectedCourse.roadmap.map((step, index) => (
-              <li key={`${step}-${index}`} className="flex items-start gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-xs font-bold text-purple-400">
-                  {index + 1}
-                </span>
-
-                <span className="pt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                  {step}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </ResultCard>
-
-        {/* Colleges */}
-        <ResultCard
-          icon={<School className="h-4 w-4 text-blue-500" />}
-          title="Top Colleges"
-          className="hover:scale-102 duration-300 ease-in-out"
-        >
-          <div className="grid gap-3 sm:grid-cols-2">
-            {selectedCourse.topColleges.map((college, index) => (
-              <div
-                key={`${college}-${index}`}
-                className="rounded-xl border border-black/10 p-4 dark:border-white/10"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-xs font-bold text-blue-500">
-                    {index + 1}
-                  </span>
-
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {college}
-                  </p>
-                </div>
-              </div>
-            ))}
+        {/* Course Header Card */}
+        <section className="rounded-2xl border border-black/10 bg-black/2 p-6 dark:border-white/10 dark:bg-white/2 sm:rounded-3xl sm:p-7 space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/15 px-3.5 py-1 text-xs font-semibold text-purple-500 dark:text-purple-400">
+            <GraduationCap className="h-3.5 w-3.5" />
+            <span>Recommended Course</span>
           </div>
-        </ResultCard>
-        <p className="mt-30 text-sm text-gray-300 dark:text-gray-600 text-center">
+
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl text-gray-900 dark:text-white">
+            {selectedCourse.course}
+          </h1>
+
+          <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1.5">
+              <Clock3 className="h-4 w-4" />
+              <span>4 years</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-purple-500 dark:text-purple-400 font-bold">
+              <Sparkles className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+              <span>{selectedCourse.matchPercentage}% AI Match</span>
+            </div>
+          </div>
+
+          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
+            {selectedCourse.aboutDegree}
+          </p>
+        </section>
+
+        {/* Horizontal Navigation Tabs */}
+        <div className="flex items-center gap-2.5 overflow-x-auto pb-1 no-scrollbar">
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer ${isActive
+                  ? "border border-purple-500/50 bg-purple-500/20 text-purple-500 dark:text-white font-semibold shadow-xs"
+                  : "border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/10"
+                  }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tab Content Panel */}
+        <section className="rounded-2xl border border-black/10 bg-black/2 p-6 dark:border-white/10 dark:bg-white/2 sm:rounded-3xl sm:p-7">
+          {/* Jobs & Salary Tab */}
+          {activeTab === "jobs" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <BriefcaseBusiness className="h-5 w-5 text-emerald-500" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Jobs after {selectedCourse.course}
+                </h3>
+              </div>
+
+              <div className="divide-y divide-black/10 dark:divide-white/10">
+                {selectedCourse.jobs.map((job, index) => {
+                  const demand = index % 3 === 2 ? "Very High" : "High";
+                  const formattedSalary = job.salaryINR.startsWith("₹")
+                    ? job.salaryINR
+                    : `₹${job.salaryINR}`;
+
+                  return (
+                    <div
+                      key={`${job.role}-${index}`}
+                      className="flex items-center justify-between py-4 first:pt-2 last:pb-2"
+                    >
+                      <div>
+                        <h4 className="text-base font-bold text-gray-900 dark:text-white">
+                          {job.role}
+                        </h4>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                          Average:{" "}
+                          <span className="font-semibold text-gray-700 dark:text-gray-200">
+                            {formattedSalary}
+                          </span>
+                        </p>
+                      </div>
+
+                      <span
+                        className={`rounded-full px-4 py-1 text-xs font-semibold border ${demand === "Very High"
+                          ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400"
+                          : "border-purple-500/30 bg-purple-500/15 text-purple-500 dark:text-purple-400"
+                          }`}
+                      >
+                        {demand}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Subjects Tab */}
+          {activeTab === "subjects" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <BookOpen className="h-5 w-5 text-yellow-500" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Subjects in {selectedCourse.course}
+                </h3>
+              </div>
+
+              <div className="flex flex-wrap gap-2.5 pt-2">
+                {selectedCourse.subjects.map((subject, index) => (
+                  <span
+                    key={`${subject}-${index}`}
+                    className="rounded-full border border-yellow-500/30 bg-yellow-500/15 px-4 py-2 text-xs font-semibold text-yellow-500"
+                  >
+                    {subject}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Roadmap Tab */}
+          {activeTab === "roadmap" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <Map className="h-5 w-5 text-purple-500 dark:text-purple-400" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Career Roadmap for {selectedCourse.course}
+                </h3>
+              </div>
+
+              <ol className="relative space-y-6 pt-2">
+                <div className="absolute left-3.5 top-6 bottom-6 w-px bg-purple-500/30" />
+                {selectedCourse.roadmap.map((step, index) => (
+                  <li
+                    key={`${step}-${index}`}
+                    className="relative flex items-start gap-4"
+                  >
+                    <span className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-500 text-xs font-bold text-white">
+                      {index + 1}
+                    </span>
+                    <div className="min-w-0 pt-0.5">
+                      <p className="text-xs font-bold uppercase tracking-wider text-purple-500 dark:text-purple-400">
+                        Year {index + 1}
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-gray-700 dark:text-gray-300">
+                        {step}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {/* Top Colleges Tab */}
+          {activeTab === "colleges" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <School className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Top Colleges for {selectedCourse.course}
+                </h3>
+              </div>
+
+              <div className="grid gap-3 pt-2 sm:grid-cols-2">
+                {selectedCourse.topColleges.map((college, index) => (
+                  <div
+                    key={`${college}-${index}`}
+                    className="flex items-center gap-3 rounded-xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/2 p-4"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-500/15 text-xs font-bold text-blue-500 dark:text-blue-400 border border-blue-500/30">
+                      {index + 1}
+                    </span>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                      {college}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Entrance Exams Tab */}
+          {activeTab === "exams" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <Target className="h-5 w-5 text-pink-500 dark:text-pink-400" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Entrance Exams for {selectedCourse.course}
+                </h3>
+              </div>
+
+              <div className="grid gap-3 pt-2 sm:grid-cols-2">
+                {selectedCourse.entranceExams.map((exam, index) => (
+                  <div
+                    key={`${exam}-${index}`}
+                    className="flex items-center gap-3 rounded-xl border border-black/10 dark:border-white/10 bg-black/2 dark:bg-white/2 p-4"
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-500/15 text-xs text-pink-500 dark:text-pink-400 font-bold border border-pink-500/30">
+                      ✓
+                    </span>
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                      {exam}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        <p className="mt-8 text-sm text-gray-400 dark:text-gray-600 text-center">
           AI-generated results based on your responses. For personalized advice,
           consult a counselor or academic advisor.
         </p>
@@ -523,7 +618,19 @@ export function Class12Result({
   // COURSE LIST VIEW
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8">
+    <div className="w-full space-y-6 sm:space-y-8">
+      <div className="flex flex-col justify-center items-center gap-5 ">
+        <p className="text-sm border-2 border-emerald-500/25 bg-emerald-500/25 text-emerald-500 w-fit rounded-full px-3 py-1 text-center flex flex-row gap-1 items-center">
+          <Stars size={16} />
+          AI Analysis Complete
+        </p>
+        <h1 className="text-4xl md:text-5xl font-black tracking-tight text-center ">
+          Recommended Courses <span className="text-blue-500">for You</span>
+        </h1>
+        <p className="text-sm text-black/50 dark:text-white/50 text-center">
+          Click any course to see jobs, salary, roadmap and colleges
+        </p>
+      </div>
       {/* Course Cards */}
       <div className="space-y-4">
         {result.recommendedCourses.map((course, index) => {
@@ -535,11 +642,10 @@ export function Class12Result({
               type="button"
               onClick={() => setSelectedCourse(course)}
               className={`
-                group w-full rounded-2xl border p-5 text-left transition-all duration-300 hover:scale-102  ease-in-out sm:p-6
-                ${
-                  isTopPick
-                    ? "border-purple-500 bg-purple-500/25"
-                    : "border-black/10 bg-black/2 dark:border-white/10 dark:bg-white/2"
+                group w-full rounded-2xl border p-5 text-left transition-all duration-300 hover:scale-102 ease-in-out sm:p-6 cursor-pointer
+                ${isTopPick
+                  ? "border-purple-500 bg-purple-500/25"
+                  : "border-black/10 bg-black/2 dark:border-white/10 dark:bg-white/2"
                 }
               `}
             >
@@ -579,7 +685,7 @@ export function Class12Result({
                 {/* Right */}
                 <div className="flex shrink-0 items-center gap-3">
                   <div className="text-right">
-                    <p className="text-3xl font-black text-blue-400 sm:text-4xl">
+                    <p className="text-3xl font-black bg-linear-to-br from-blue-500 to-purple-500 text-transparent bg-clip-text sm:text-4xl">
                       {course.matchPercentage}%
                     </p>
 
@@ -598,7 +704,7 @@ export function Class12Result({
       <p className="text-center text-sm text-gray-500 animate-bounce">
         Tap any course to explore jobs, salary, roadmap and colleges
       </p>
-      <p className=" text-sm  text-gray-300 dark:text-gray-600 text-center">
+      <p className=" text-sm text-gray-300 dark:text-gray-600 text-center">
         AI-generated results based on your responses. For personalized advice,
         consult a counselor or academic advisor.
       </p>

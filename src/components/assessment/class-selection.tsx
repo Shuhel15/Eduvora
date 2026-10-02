@@ -35,7 +35,7 @@ export default function ClassSelection() {
           Class 10
         </h2>
 
-        <p className="font-semibold mt-3 text-sm">
+        <p className=" mt-3 text-sm text-black/50 dark:text-white/50">
           Choosing between Science, Commerce, and Arts streams.
         </p>
       </button>
@@ -58,7 +58,7 @@ export default function ClassSelection() {
           Class 12
         </h2>
 
-        <p className="mt-3 text-sm  font-semibold">
+        <p className="mt-3 text-sm text-black/50 dark:text-white/50">
           Get personalized course and career recommendations.
         </p>
       </button>
