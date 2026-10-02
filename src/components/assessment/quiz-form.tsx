@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { class10Quiz } from "@/data/quiz/class10";
 import { class12Quiz } from "@/data/quiz/class12";
 import type { QuizQuestions } from "@/types/quiz";
+import Analysing from "@/components/ui/Analysing";
 
 function QuizContent() {
   const router = useRouter();
@@ -27,8 +28,8 @@ function QuizContent() {
   }, [classLevel]);
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [isAnalysing, setIsAnalysing] = useState(false);
 
   if (classLevel !== "10" && classLevel !== "12") {
     return (
@@ -140,9 +141,7 @@ function QuizContent() {
     };
 
     try {
-      toast.loading("Generating your personalized career result...", {
-        id: "generate-result",
-      });
+      setIsAnalysing(true);
 
       const response = await fetch("/api/assessment/result", {
         method: "POST",
@@ -178,6 +177,7 @@ function QuizContent() {
     } catch (error) {
       console.error("Assessment generation error:", error);
 
+      setIsAnalysing(false);
       toast.error(
         error instanceof Error
           ? error.message
@@ -191,6 +191,9 @@ function QuizContent() {
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
+  if (isAnalysing) {
+    return <Analysing />;
+  }
   return (
     <div className="mx-auto w-full max-w-3xl py-12">
       <div className="mb-8">
