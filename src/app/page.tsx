@@ -1,21 +1,21 @@
-import Link from "next/link";
+import {Metadata} from "next";
+import { Container } from "@/components/container";
+import Homepage from "@/components/home/home";
+export const metadata: Metadata ={
+  title: "Eduvora",
+  description:"Eduvora is an AI-powered career guidance platform that helps class 10th and 12th students to make decisions about which course or stream they should pursue.",
+  robots:{
+    index:true,
+    follow:true
+  }
+}
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold">Welcome to Eduvora</h1>
-
-        <p className="mt-3 text-gray-500">
-          AI-powered career guidance for students
-        </p>
-        <Link
-        href="/assessment/class"
-        >
-          Get Started
-        </Link>
-
-      </div>
-    </main>
+    <Container>
+      <main>
+        <Homepage/>
+      </main>
+      </Container>
   );
 }
