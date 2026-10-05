@@ -4,6 +4,7 @@ import {
   TrendingUp,
   GraduationCap,
 } from "lucide-react";
+import CountUp from "../ui/countup";
 
 export default function Process() {
   const steps = [
@@ -85,7 +86,7 @@ export default function Process() {
             className=" mx-auto mt-10 mb-10 max-w-5xl text-center text-4xl font-black leading-[1.08] tracking-tight text-black drop-shadow-[0_5px_4px_rgba(0,0,0,0.12)] sm:text-5xl sm:leading-[1.05] md:text-6xl lg:text-7xl dark:text-white
             "
           >
-            4 steps to your future
+            <CountUp end={4}/> steps to your <span className="text-emerald-500">future</span>
           </h1>
         </div>
 

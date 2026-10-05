@@ -12,7 +12,7 @@ export default function Whatweoffer() {
         <span className="h-0.5 w-5 bg-[#6366F1]" />
       </p>
       <h1 className="max-w-5xl text-4xl font-black leading-[1.08] tracking-tight text-black drop-shadow-[0_5px_4px_rgba(0,0,0,0.12)] sm:text-5xl sm:leading-[1.05] md:text-6xl lg:text-7xl dark:text-white mt-10 mb-10">
-        Every thing you need to choose your path
+        Every thing you need to choose <span className="text-indigo-500">your path</span>
       </h1>
 
       <div className="grid grid-cols sm:grid-cols-2 gap-4">

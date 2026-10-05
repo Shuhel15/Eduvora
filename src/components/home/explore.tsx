@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
+import CountUp from "../ui/countup";
 
 export default function Explore() {
   return (
@@ -28,7 +29,7 @@ export default function Explore() {
         className=" mx-auto mt-8 mb-4 max-w-5xl text-center text-4xl font-black leading-[1.08] tracking-tight text-black drop-shadow-[0_5px_4px_rgba(0,0,0,0.12)] sm:text-5xl md:text-6xl lg:text-7xl dark:text-white
         "
       >
-        Every stream, every career
+        Every stream, every <span className="text-pink-500">career</span>
       </h1>
 
       <p className="mb-10 max-w-2xl px-2 text-sm leading-6 text-black/50 sm:text-base md:text-lg dark:text-white/50">
@@ -131,7 +132,7 @@ export default function Explore() {
 
       <div className=" mt-20 mb-20 flex w-full max-w-6xl flex-col items-center justify-center rounded-3xl border border-indigo-500/20 bg-indigo-500/25 px-6 py-16  transition-all duration-300 hover:border-indigo-500/30 hover:bg-indigo-500/10 sm:px-10 sm:py-20 dark:border-indigo-400/20 dark:bg-indigo-400/5 dark:hover:border-indigo-400/30 dark:hover:bg-indigo-400/10">
         <h1 className=" mx-auto mb-4 max-w-5xl text-center text-4xl font-black leading-[1.08] tracking-tight text-black drop-shadow-[0_5px_4px_rgba(0,0,0,0.12)] sm:text-5xl md:text-6xl lg:text-7xl dark:text-white">
-          Your future starts with one quiz
+          Your future starts with <span className="text-blue-500">one quiz</span>
         </h1>
 
         <p className=" mb-10 max-w-2xl px-2 text-center text-sm leading-6 text-black/50 sm:text-base md:text-lg dark:text-white/50">
@@ -151,7 +152,7 @@ export default function Explore() {
         <div
           className=" flex min-h-31.25 flex-col items-center justify-center rounded-2xl border border-blue-500 bg-blue-500/25 px-6 py-5 text-center transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:border-blue-500/70 hover:bg-blue-500/15  dark:bg-blue-500/25 dark:hover:border-blue-400/70 dark:hover:bg-blue-400/15"
         >
-          <h1 className="text-4xl font-black tracking-tight">10</h1>
+          <h1 className="text-4xl font-black tracking-tight"><CountUp end={10}/></h1>
           <p className="mt-1 text-sm text-black/50 dark:text-white/50">
             Smart Questions
           </p>
@@ -160,7 +161,7 @@ export default function Explore() {
         <div
           className=" flex min-h-31.25 flex-col items-center justify-center rounded-2xl border border-purple-500 bg-purple-500/25 px-6 py-5 text-center transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:border-purple-500/70 hover:bg-purple-500/15  dark:hover:border-purple-400/70 dark:hover:bg-purple-400/15 "
         >
-          <h1 className="text-4xl font-black tracking-tight">50+</h1>
+          <h1 className="text-4xl font-black tracking-tight"><CountUp end={50}/>+</h1>
           <p className="mt-1 text-sm text-black/50 dark:text-white/50">
             Career Paths
           </p>
@@ -169,7 +170,7 @@ export default function Explore() {
         <div
           className=" flex min-h-31.25 flex-col items-center justify-center rounded-2xl border border-emerald-500 bg-emerald-500/25 px-6 py-5 text-center transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:border-emerald-500/70 hover:bg-emerald-500/15  dark:hover:border-emerald-400/70 dark:hover:bg-emerald-400/15 "
         >
-          <h1 className="text-4xl font-black tracking-tight">500+</h1>
+          <h1 className="text-4xl font-black tracking-tight"><CountUp end={500}/>+</h1>
           <p className="mt-1 text-sm text-black/50 dark:text-white/50">
             Colleges
           </p>
@@ -179,7 +180,7 @@ export default function Explore() {
           className=" flex min-h-31.25 flex-col items-center justify-center rounded-2xl border border-orange-500 bg-orange-500/25 px-6 py-5 text-center transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:border-orange-500/70 hover:bg-orange-500/15  dark:hover:border-orange-400/70 dark:hover:bg-orange-400/15
     "
         >
-          <h1 className="text-4xl font-black tracking-tight">3 min</h1>
+          <h1 className="text-4xl font-black tracking-tight"><CountUp end={3}/> min</h1>
           <p className="mt-1 text-sm text-black/50 dark:text-white/50">
             To get results
           </p>

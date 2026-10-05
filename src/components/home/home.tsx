@@ -1,6 +1,7 @@
 import Explore from "./explore";
 import HeroSection from "./herosection";
 import Process from "./process";
+import FAQ from "./Q&A";
 import Whatweoffer from "./whatweoffer";
 export default function Homepage() {
   return (
@@ -9,6 +10,7 @@ export default function Homepage() {
     <Whatweoffer />
     <Process/>
     <Explore/>
+    <FAQ/>
     </>
   );
 }

@@ -42,7 +42,7 @@ export default function Navbar() {
       <Container className="max-w-360">
         <nav
           aria-label="Main navigation"
-          className="relative flex min-h-14 items-center justify-between rounded-xl border border-black/10 bg-white/70 px-3.5 shadow-lg backdrop-blur-xl sm:min-h-16 sm:px-6 dark:border-white/10 dark:bg-black/60"
+          className="relative flex min-h-14 items-center justify-between rounded-xl border border-black/10 bg-white/70 px-3.5 shadow-lg backdrop-blur-sm sm:min-h-16 sm:px-6 dark:border-white/10 dark:bg-black/60"
         >
           {/* Logo */}
           <Link
