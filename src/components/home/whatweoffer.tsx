@@ -3,7 +3,7 @@ import { GraduationCap, Map, Target, TrendingUp } from "lucide-react";
 export default function Whatweoffer() {
   return (
     <section
-      id="howitworks"
+      id="whatweoffer"
       className="flex flex-col items-center justify-center text-center mt-20 "
     >
       <p className="uppercase gap-2 flex items-center text-sm font-medium tracking-widest text-[#6366F1]">

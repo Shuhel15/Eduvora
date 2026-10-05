@@ -63,18 +63,11 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden items-center gap-6 md:flex">
             <ul className="absolute left-1/2 flex -translate-x-1/2 items-center gap-6">
-              <li>
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-black/70 transition-transform duration-200 hover:-translate-y-1 hover:bg-black/10 hover:text-black dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
-                >
-                  Home
-                </Link>
-              </li>
+
 
               <li>
                 <Link
-                  href="/about"
+                  href="/"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-black/70 transition-transform duration-200 hover:-translate-y-1 hover:bg-black/10 hover:text-black dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
                 >
                   About
@@ -83,10 +76,18 @@ export default function Navbar() {
 
               <li>
                 <Link
-                  href="/features"
+                  href="/#whatweoffer"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-black/70 transition-transform duration-200 hover:-translate-y-1 hover:bg-black/10 hover:text-black dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
                 >
                   Features
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#faq"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-black/70 transition-transform duration-200 hover:-translate-y-1 hover:bg-black/10 hover:text-black dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+                >
+                  FAQ
                 </Link>
               </li>
               {status === "authenticated" && (
@@ -225,18 +226,18 @@ export default function Navbar() {
                     <Link
                       href="/assessment/class"
                       onClick={closeMenu}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-black hover:bg-black/5 dark:text-white dark:hover:bg-white/10"
+                      className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-black hover:bg-black/5 dark:text-white dark:hover:bg-white/10"
                     >
-                      <GraduationCap className="h-4 w-4" />
+                      <GraduationCap className="h-4 w-4 transition-transform group-hover:-translate-y-1 duration-300" />
                       Take Quiz
                     </Link>
 
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-500 hover:bg-red-500/10"
+                      className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-500 hover:bg-red-500/10"
                     >
-                      <LogOut className="h-4 w-4" />
+                      <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-300" />
                       Logout
                     </button>
                   </div>
@@ -272,19 +273,10 @@ export default function Navbar() {
           >
             <nav aria-label="Mobile navigation">
               <ul className="flex flex-col gap-1">
-                <li>
-                  <Link
-                    href="/"
-                    onClick={closeMenu}
-                    className="block rounded-lg px-4 py-3 text-sm font-semibold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
-                  >
-                    Home
-                  </Link>
-                </li>
 
                 <li>
                   <Link
-                    href="/about"
+                    href="/"
                     onClick={closeMenu}
                     className="block rounded-lg px-4 py-3 text-sm font-semibold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
                   >
@@ -294,11 +286,20 @@ export default function Navbar() {
 
                 <li>
                   <Link
-                    href="/features"
+                    href="/#whatweoffer"
                     onClick={closeMenu}
                     className="block rounded-lg px-4 py-3 text-sm font-semibold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
                   >
                     Features
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#faq"
+                    onClick={closeMenu}
+                    className="block rounded-lg px-4 py-3 text-sm font-semibold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
+                  >
+                    FAQ
                   </Link>
                 </li>
 
@@ -319,9 +320,9 @@ export default function Navbar() {
                       <Link
                         href="/assessment/class"
                         onClick={closeMenu}
-                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
+                        className="group flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10"
                       >
-                        <GraduationCap className="h-4 w-4" />
+                        <GraduationCap className="h-4 w-4 transition-transform group-hover:-translate-y-1 duration-300" />
                         Take Quiz
                       </Link>
                     </li>
@@ -330,9 +331,9 @@ export default function Navbar() {
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-500/10"
+                        className="group flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-500/10"
                       >
-                        <LogOut className="h-4 w-4" />
+                        <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-1 duration-300" />
                         Logout
                       </button>
                     </li>
