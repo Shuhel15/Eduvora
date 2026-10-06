@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MoveRight } from "lucide-react";
+import {  MoveRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Herosection() {
   const router = useRouter();
@@ -30,7 +31,6 @@ export default function Herosection() {
         </p>
       </div>
 
-      {/* CTA Buttons */}
       <div className="mt-8 flex flex-row items-center justify-center gap-2.5 sm:mt-10 sm:gap-4">
         <button
           onClick={() => router.push("/assessment/class")}
@@ -41,12 +41,12 @@ export default function Herosection() {
           <MoveRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1 sm:h-5 sm:w-5" />
         </button>
 
-        <a
-          href="#howitworks"
+        <Link
+          href="/#process"
           className="rounded-full border-2 border-pink-500 bg-pink-500/25 px-3.5 py-2 text-xs font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-pink-500/40 hover:shadow-lg hover:shadow-pink-500/40 active:scale-95 sm:px-8 sm:py-2.5 sm:text-lg"
         >
           See how it works
-        </a>
+        </Link>
       </div>
 
       {/* Stats */}

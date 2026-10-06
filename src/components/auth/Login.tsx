@@ -227,6 +227,7 @@ export default function LoginForm() {
             {/* Forgot Password */}
             <div className="flex justify-end">
               <button
+                onClick={() => router.push("/forgot-password")}
                 type="button"
                 className="text-sm font-semibold text-purple-600 transition hover:text-purple-700 dark:text-purple-400"
               >

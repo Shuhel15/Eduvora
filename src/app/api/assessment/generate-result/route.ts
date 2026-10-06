@@ -22,6 +22,21 @@ export async function POST(request: Request) {
       );
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { id: true },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Your session is no longer valid. Please sign in again.",
+        },
+        { status: 401 },
+      );
+    }
+
     // 2. Read request body
     const body = await request.json();
 
@@ -53,7 +68,7 @@ export async function POST(request: Request) {
       data: {
         class: Number(parsed.data.classLevel),
         status: "COMPLETED",
-        userId: session.user.id,
+        userId: user.id,
 
         marks: {
           create: parsed.data.marks.map((item) => ({

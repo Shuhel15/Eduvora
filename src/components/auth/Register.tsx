@@ -451,10 +451,14 @@ export default function RegisterForm() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-5 flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-black/10 dark:border-white/10" />
-            </div>
+          <div className="my-6 flex items-center gap-3">
+            <div className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+
+            <span className="text-xs font-medium text-black/40 dark:text-white/40">
+              OR
+            </span>
+
+            <div className="h-px flex-1 bg-black/10 dark:bg-white/10" />
           </div>
 
           {/* Google */}

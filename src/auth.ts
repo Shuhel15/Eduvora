@@ -16,9 +16,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") {
+        return true;
+      }
+
+      if (!user.email) {
+        return false;
+      }
+
+      await prisma.user.upsert({
+        where: { email: user.email.toLowerCase() },
+        update: {
+          name: user.name,
+          image: user.image,
+        },
+        create: {
+          email: user.email.toLowerCase(),
+          name: user.name,
+          image: user.image,
+          emailVerified: new Date(),
+        },
+      });
+
+      return true;
+    },
+
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        const databaseUser = user.email
+          ? await prisma.user.findUnique({
+              where: { email: user.email.toLowerCase() },
+              select: { id: true },
+            })
+          : null;
+
+        if (databaseUser) {
+          token.id = databaseUser.id;
+        }
       }
 
       return token;
@@ -62,7 +97,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const { email, password } = parsed.data;
+        const { password } = parsed.data;
+        const email = parsed.data.email.toLowerCase();
 
         const user = await prisma.user.findUnique({
           where: {
