@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   description:
     "Eduvora helps Class 10 and Class 12 students discover suitable streams, courses, careers, colleges and career paths using AI-powered guidance.",
 
+  verification: {
+    google: "6CVFv23yoo0HObZR8qEBQMtQBHwDecH-zUXYjwwjIA4",
+  },
   keywords: [
     "Eduvora",
     "AI career guidance",
