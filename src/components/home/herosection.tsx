@@ -51,7 +51,7 @@ export default function Herosection() {
       >
         <button
           onClick={() => router.push("/assessment/class")}
-          className="group flex items-center gap-1.5 rounded-full border-2 border-purple-500 bg-purple-500/25 px-3.5 py-2 text-xs font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-purple-500/40 hover:shadow-lg hover:shadow-purple-500/40 active:scale-95 sm:gap-2 sm:px-8 sm:py-2.5 sm:text-lg"
+          className="group flex items-center gap-1.5 rounded-full border-2 border-purple-500 bg-purple-500/25 px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-purple-500/40 hover:shadow-lg hover:shadow-purple-500/40 active:scale-95 sm:gap-2 sm:px-8 sm:py-2.5 sm:text-lg"
         >
           Start Free Quiz
           <MoveRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1 sm:h-5 sm:w-5" />
@@ -59,7 +59,7 @@ export default function Herosection() {
 
         <Link
           href="/#process"
-          className="rounded-full border-2 border-pink-500 bg-pink-500/25 px-3.5 py-2 text-xs font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-pink-500/40 hover:shadow-lg hover:shadow-pink-500/40 active:scale-95 sm:px-8 sm:py-2.5 sm:text-lg"
+          className="rounded-full border-2 border-pink-500 bg-pink-500/25 px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-pink-500/40 hover:shadow-lg hover:shadow-pink-500/40 active:scale-95 sm:px-8 sm:py-2.5 sm:text-lg"
         >
           See how it works
         </Link>
@@ -110,4 +110,4 @@ export default function Herosection() {
       </motion.div>
     </motion.section>
   );
-}
+}

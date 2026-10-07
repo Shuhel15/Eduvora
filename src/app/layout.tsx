@@ -13,7 +13,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://eduvora-efb20.web.app"),
+  metadataBase: new URL("https://eduvora-nu.vercel.app"),
 
   title: {
     default: "Eduvora | AI Career Guidance for Students",
@@ -29,15 +29,41 @@ export const metadata: Metadata = {
     "career guidance for students",
     "Class 10 career guidance",
     "Class 12 career guidance",
+    "career options after 10th",
+    "career options after 12th",
+    "career guidance after 10th",
+    "career guidance after 12th",
+    "what to choose after 10th",
+    "what to choose after 12th",
     "stream selection",
+    "stream selection after 10th",
+    "best stream after 10th",
+    "Science stream",
+    "Commerce stream",
+    "Arts stream",
+    "Humanities stream",
+    "subject selection after 10th",
+    "course selection after 12th",
     "course recommendation",
+    "course comparison",
+    "degree course guidance",
+    "college selection guidance",
+    "college guidance for students",
+    "career aptitude assessment",
+    "student career assessment",
+    "AI career assessment",
+    "personalized career recommendations",
     "career counselling",
     "career guidance India",
     "student career guidance",
+    "career counselling for students",
+    "online career counselling",
+    "career planning for students",
+    "best career options in India",
   ],
 
-  authors: [{ name: "Eduvora" }],
-  creator: "Eduvora",
+  authors: [{ name: "Shuhel Ahmed" }],
+  creator: "Shuhel Ahmed",
   publisher: "Eduvora",
 
   alternates: {
@@ -56,10 +82,14 @@ export const metadata: Metadata = {
     },
   },
 
+  icons:{
+    icon: "/favicon.ico",
+  },
+
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://eduvora-efb20.web.app",
+    url: "https://eduvora-nu.vercel.app",
     siteName: "Eduvora",
     title: "Eduvora | AI Career Guidance for Students",
     description:
@@ -91,7 +121,7 @@ export default function RootLayout({
             <div className="relative z-10">
               <NavBar />
               {children}
-              <Footer/>
+              <Footer />
             </div>
           </div>
         </Providers>
