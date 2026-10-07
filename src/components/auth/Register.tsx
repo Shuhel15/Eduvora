@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { motion } from "framer-motion";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -102,7 +103,13 @@ export default function RegisterForm() {
   };
 
   return (
-    <main className="mx-auto my-8 grid w-full max-w-6xl min-w-0 grid-cols-1 overflow-x-hidden px-4 sm:my-12 sm:px-6 lg:my-16 lg:grid-cols-2 lg:px-4 xl:px-0">
+    <motion.main
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto my-8 grid w-full max-w-6xl min-w-0 grid-cols-1 overflow-x-hidden px-4 sm:my-12 sm:px-6 lg:my-16 lg:grid-cols-2 lg:px-4 xl:px-0"
+    >
       <div className="hidden min-w-0 overflow-hidden rounded-3xl border border-emerald-500 bg-emerald-500/15 p-6 backdrop-blur-xs lg:flex lg:flex-col lg:rounded-l-3xl lg:rounded-r-none lg:p-7">
         <Link
           href="/"
@@ -475,6 +482,6 @@ export default function RegisterForm() {
           </button>
         </div>
       </div>
-    </main>
+    </motion.main>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 interface CountUpProps {
   end: number;
@@ -67,5 +68,15 @@ export default function CountUp({
     return () => cancelAnimationFrame(animationFrame);
   }, [hasStarted, end, duration]);
 
-  return <span ref={ref}>{count}</span>;
-}
+  return (
+    <motion.span
+      ref={ref}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4 }}
+    >
+      {count}
+    </motion.span>
+  );
+}

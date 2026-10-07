@@ -3,6 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
+import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -29,7 +30,11 @@ export default function ThemeToggle() {
   const isDark = theme === "dark";
 
   return (
-    <button
+    <motion.button
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3 }}
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Toggle theme"
@@ -47,6 +52,7 @@ export default function ThemeToggle() {
           aria-hidden="true"
         />
       )}
-    </button>
+    </motion.button>
   );
 }
+

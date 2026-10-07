@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { marksSchema, type SubjectMarks } from "@/validations/assessment";
+import { motion } from "framer-motion";
 
 const defaultSubjects = {
   "10": ["English", "Mathematics", "Science", "Social Science", "Hindi"],
@@ -132,7 +133,13 @@ function handleContinue() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl py-12">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto w-full max-w-3xl py-12"
+    >
       <div className="mb-10">
         <p className="text-md w-fit font-semibold text-yellow-500 py-1 px-2 bg-amber-400/40 border-2 rounded-full border-yellow-500/25">
           Class {classLevel}
@@ -150,8 +157,12 @@ function handleContinue() {
 
       <div className="space-y-4">
         {subjects.map((item, index) => (
-          <div
+          <motion.div
             key={index}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: 0.05 * index }}
             className="grid gap-3 border-2 rounded-lg border-black/10 p-4 dark:border-white/10 sm:grid-cols-[1fr_140px_auto] bg-white dark:bg-black"
           >
             <div>
@@ -202,7 +213,7 @@ function handleContinue() {
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -222,6 +233,7 @@ function handleContinue() {
       >
         Continue to Quiz
       </button>
-    </div>
+    </motion.div>
   );
 }
+

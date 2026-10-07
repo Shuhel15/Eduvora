@@ -15,6 +15,7 @@ import {
 
 import ThemeToggle from "@/components/theme-toggle";
 import { Container } from "../container";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +39,13 @@ export default function Navbar() {
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-50 pt-5">
+    <motion.header
+      initial={{ opacity: 0, y: -15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="sticky top-0 z-50 pt-5"
+    >
       <Container className="max-w-360">
         <nav
           aria-label="Main navigation"
@@ -354,6 +361,6 @@ export default function Navbar() {
           </div>
         )}
       </Container>
-    </header>
+    </motion.header>
   );
 }

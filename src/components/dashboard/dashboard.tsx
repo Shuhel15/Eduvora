@@ -12,6 +12,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 import type { Assessment, AssessmentResult } from "@/types/assessment";
 
@@ -98,7 +99,13 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
   }
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8 sm:py-10">
+    <motion.main
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto w-full max-w-7xl space-y-8 py-8 sm:py-10"
+    >
       {/* Welcome */}
       <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center border border-purple-500 p-4 rounded-xl">
         <div>
@@ -281,7 +288,7 @@ export default function Dashboard({ userName, assessments }: DashboardProps) {
           </div>
         )}
       </section>
-    </main>
+    </motion.main>
   );
 }
 

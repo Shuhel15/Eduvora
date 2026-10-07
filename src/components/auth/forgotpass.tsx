@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
 
 type Step = "email" | "otp" | "password" | "success";
 
@@ -169,7 +170,13 @@ export default function ForgotPasswordComponent() {
     "group flex w-full items-center justify-center gap-2 rounded-xl bg-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-purple-700 hover:shadow-xl hover:shadow-purple-500/30 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-lg";
 
   return (
-    <main className="mx-auto my-8 grid w-full max-w-6xl min-w-0 overflow-x-hidden px-4 sm:my-12 sm:px-6 lg:my-20 lg:grid-cols-2 lg:px-0">
+    <motion.main
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto my-8 grid w-full max-w-6xl min-w-0 overflow-x-hidden px-4 sm:my-12 sm:px-6 lg:my-20 lg:grid-cols-2 lg:px-0"
+    >
       <div className="hidden min-w-0 overflow-hidden rounded-l-3xl border border-pink-500 bg-pink-500/15 p-6 backdrop-blur-xs lg:flex lg:flex-col lg:p-7">
         <Link
           href="/"
@@ -516,7 +523,7 @@ export default function ForgotPasswordComponent() {
           )}
         </div>
       </div>
-    </main>
+    </motion.main>
   );
 }
 

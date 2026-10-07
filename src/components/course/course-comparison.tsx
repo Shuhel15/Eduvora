@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import type { AssessmentResult } from "@/validations/assessment-result";
+import { motion } from "framer-motion";
 
 type Class12Course = Extract<
   AssessmentResult,
@@ -63,7 +64,13 @@ export default function CourseComparison({ courses }: CourseComparisonProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="space-y-8"
+    >
       {/* Header */}
       <section>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -332,7 +339,7 @@ export default function CourseComparison({ courses }: CourseComparisonProps) {
           </p>
         </section>
       )}
-    </div>
+    </motion.div>
   );
 }
 

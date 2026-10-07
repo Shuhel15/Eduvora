@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface FAQItem {
   id: number;
@@ -96,8 +97,21 @@ export default function FAQ() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <section id="faq" className="mx-auto w-full max-w-5xl px-4 py-20">
-      <div className="flex flex-col items-center text-center">
+    <motion.section
+      id="faq"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="mx-auto w-full max-w-5xl px-4 py-20"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center text-center"
+      >
         <p className="flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-widest text-purple-500 sm:text-sm">
           <span className="h-0.5 w-5 bg-purple-500" />
           Got Questions?
@@ -111,7 +125,7 @@ export default function FAQ() {
         <p className="mx-auto mb-10 max-w-2xl text-center text-sm leading-6 text-black/50 sm:text-base md:text-lg dark:text-white/50">
           Clear, direct, and straightforward answers to all your common questions about education and career planning.
         </p>
-      </div>
+      </motion.div>
 
       <div className="mb-10 space-y-6">
         <div className="relative mx-auto max-w-2xl">
@@ -186,8 +200,12 @@ export default function FAQ() {
             const isOpen = openIndex === index;
 
             return (
-              <div
+              <motion.div
                 key={faq.id}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.05 * index }}
                 className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
                   isOpen
                     ? "border-purple-500 bg-purple-500/10 text-black shadow-lg shadow-purple-500/10 dark:border-purple-500/80 dark:bg-purple-500/15 dark:text-white"
@@ -244,13 +262,19 @@ export default function FAQ() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       )}
 
-      <div className="mt-16 flex w-full flex-col items-center justify-between gap-6 rounded-3xl border border-pink-500 bg-pink-500/25 p-6 sm:p-8 md:flex-row  ">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="mt-16 flex w-full flex-col items-center justify-between gap-6 rounded-3xl border border-pink-500 bg-pink-500/25 p-6 sm:p-8 md:flex-row  "
+      >
         <div className="flex items-center gap-4 text-center md:text-left">
           <div className="hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-pink-500/30 bg-pink-500/25 text-pink-500 ">
             <Sparkles className="h-6 w-6" />
@@ -274,8 +298,9 @@ export default function FAQ() {
             <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
+
 

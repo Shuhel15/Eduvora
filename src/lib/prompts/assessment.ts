@@ -83,7 +83,8 @@ Required JSON:
 }
 
 Rules:
-- Recommend 2 to 3 suitable courses.
+- Recommend minimum 3 suitable courses.
+- Recommend minimum 6 suitable jobs. 
 - matchPercentage must be 0-100.
 - All arrays must contain at least 1 item.
 - Keep text short.

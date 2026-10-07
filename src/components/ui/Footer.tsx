@@ -2,10 +2,17 @@
 
 import { Compass, Heart } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="mx-4 sm:mx-6 lg:mx-10 border-t-2 border-black/10 dark:border-white/10">
+    <motion.footer
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="mx-4 sm:mx-6 lg:mx-10 border-t-2 border-black/10 dark:border-white/10"
+    >
       <div className="mx-auto flex max-w-7xl flex-col gap-10 py-10 sm:flex-row sm:items-start sm:justify-between sm:gap-12">
         <div className="max-w-xl">
           <Link
@@ -161,6 +168,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
+

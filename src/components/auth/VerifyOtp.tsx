@@ -14,6 +14,7 @@ import {
   AlertCircle,
   KeyRound,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 function VerifyOtpContent() {
   const router = useRouter();
@@ -176,7 +177,13 @@ function VerifyOtpContent() {
   }
 
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="relative w-full max-w-md mx-auto"
+    >
       {/* Background glow behind card */}
       <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 blur-xl opacity-25 dark:opacity-35 pointer-events-none" />
 
@@ -299,7 +306,7 @@ function VerifyOtpContent() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -316,4 +323,5 @@ export default function VerifyOtpForm() {
     </Suspense>
   );
 }
+
 

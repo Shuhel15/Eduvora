@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { Compass, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { motion } from "framer-motion";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -57,7 +58,13 @@ export default function LoginForm() {
   }
 
   return (
-    <main className="mx-auto my-8 grid w-full max-w-6xl min-w-0 overflow-x-hidden px-4 sm:my-12 sm:px-6 lg:my-20 lg:grid-cols-2 lg:px-0">
+    <motion.main
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto my-8 grid w-full max-w-6xl min-w-0 overflow-x-hidden px-4 sm:my-12 sm:px-6 lg:my-20 lg:grid-cols-2 lg:px-0"
+    >
       {/* LEFT SIDE — Hidden on Mobile */}
       <div className="hidden min-w-0 overflow-hidden rounded-l-3xl border border-pink-500 bg-pink-500/15 p-6 backdrop-blur-xs lg:flex lg:flex-col lg:p-7">
         {/* Logo */}
@@ -281,6 +288,7 @@ export default function LoginForm() {
           </button>
         </div>
       </div>
-    </main>
+    </motion.main>
   );
 }
+

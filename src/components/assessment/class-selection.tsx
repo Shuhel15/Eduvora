@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BookOpen, GraduationCap } from "lucide-react";
+import { motion } from "framer-motion";
 
 type ClassLevel = "10" | "12";
 
@@ -16,7 +17,13 @@ export default function ClassSelection() {
   }
 
   return (
-    <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2"
+    >
       <button
         type="button"
         onClick={() => setSelectedClass("10")}
@@ -71,6 +78,7 @@ export default function ClassSelection() {
       >
         Continue
       </button>
-    </div>
+    </motion.div>
   );
 }
+

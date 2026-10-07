@@ -8,6 +8,7 @@ import { class10Quiz } from "@/data/quiz/class10";
 import { class12Quiz } from "@/data/quiz/class12";
 import type { QuizQuestions } from "@/types/quiz";
 import Analysing from "@/components/ui/Analysing";
+import { motion } from "framer-motion";
 
 function QuizContent() {
   const router = useRouter();
@@ -195,7 +196,13 @@ function QuizContent() {
     return <Analysing />;
   }
   return (
-    <div className="mx-auto w-full max-w-3xl py-12">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto w-full max-w-3xl py-12"
+    >
       <div className="mb-8">
         <p className="text-sm text-yellow-500 font-semibold border-2 rounded-full w-fit border-yellow-500 bg-yellow-500/25 px-2 py-1">
           Class {classLevel}
@@ -221,7 +228,13 @@ function QuizContent() {
       </div>
 
       {/* Question */}
-      <div className="border rounded-xl border-black/10 p-5 dark:border-white/10 sm:p-8">
+      <motion.div
+        key={currentQuestion}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        className="border rounded-xl border-black/10 p-5 dark:border-white/10 sm:p-8"
+      >
         <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
           Question {currentQuestion + 1}
         </p>
@@ -263,7 +276,7 @@ function QuizContent() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* Navigation */}
       <div className="mt-6 flex items-center justify-between gap-4">
@@ -289,7 +302,7 @@ function QuizContent() {
           )}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -300,3 +313,4 @@ export default function QuizForm() {
     </Suspense>
   );
 }
+

@@ -25,6 +25,7 @@ import {
 import type { AssessmentResult } from "@/validations/assessment-result";
 import type { AssessmentResponse } from "@/types/assessment";
 import Loading from "@/app/loading";
+import { motion } from "framer-motion";
 
 export default function ResultContent() {
   const searchParams = useSearchParams();
@@ -117,13 +118,19 @@ export default function ResultContent() {
   }
 
   return (
-    <div className="w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="w-full"
+    >
       {result.classLevel === "10" ? (
         <Class10Result result={result} />
       ) : (
         <Class12Result result={result} />
       )}
-    </div>
+    </motion.div>
   );
 }
 

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { College } from "@/types/nearbycollege";
+import { motion } from "framer-motion";
 
 export default function NearbyCollegesPage() {
   const [colleges, setColleges] = useState<College[]>([]);
@@ -100,7 +101,13 @@ export default function NearbyCollegesPage() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 py-8 sm:py-10">
+    <motion.main
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mx-auto w-full max-w-7xl space-y-8 py-8 sm:py-10"
+    >
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <section className="mb-10 flex flex-col items-center rounded-xl bg-purple-500/25 border border-purple-500 p-6  text-center shadow-lg shadow-purple-500/10 sm:p-10">
@@ -211,7 +218,7 @@ export default function NearbyCollegesPage() {
           </div>
         )}
       </div>
-    </main>
+    </motion.main>
   );
 }
 

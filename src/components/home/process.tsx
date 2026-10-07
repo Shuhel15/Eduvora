@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Lightbulb,
   Sparkles,
@@ -5,6 +7,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import CountUp from "../ui/countup";
+import { motion } from "framer-motion";
 
 export default function Process() {
   const steps = [
@@ -71,11 +74,24 @@ export default function Process() {
   ];
 
   return (
-    <section id="process" className="w-full py-20">
+    <motion.section
+      id="process"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="w-full py-20"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}
-        <div className="mb-16 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-16 text-center"
+        >
           <p className="mb-5 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest text-emerald-400">
             <span className="h-0.5 w-5 bg-emerald-400" />
             SIMPLE PROCESS
@@ -83,22 +99,25 @@ export default function Process() {
           </p>
 
           <h1
-            className=" mx-auto mt-10 mb-10 max-w-5xl text-center text-4xl font-black leading-[1.08] tracking-tight text-black drop-shadow-[0_5px_4px_rgba(0,0,0,0.12)] sm:text-5xl sm:leading-[1.05] md:text-6xl lg:text-7xl dark:text-white
-            "
+            className=" mx-auto mt-10 mb-10 max-w-5xl text-center text-4xl font-black leading-[1.08] tracking-tight text-black drop-shadow-[0_5px_4px_rgba(0,0,0,0.12)] sm:text-5xl sm:leading-[1.05] md:text-6xl lg:text-7xl dark:text-white"
           >
             <CountUp end={4}/> steps to your <span className="text-emerald-500">future</span>
           </h1>
-        </div>
+        </motion.div>
 
         {/* Steps */}
         <div className="relative">
           <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-4 md:gap-4">
-            {steps.map((step) => {
+            {steps.map((step, idx) => {
               const Icon = step.icon;
 
               return (
-                <div
+                <motion.div
                   key={step.number}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 * idx }}
                   className="relative flex flex-col items-center text-center"
                 >
                   {/* Icon */}
@@ -126,12 +145,12 @@ export default function Process() {
                   <p className="mt-2 text-sm font-medium leading-5 dark:text-white/50 text-black/50 sm:text-sm sm:leading-6">
                     {step.description}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
-}
+}
